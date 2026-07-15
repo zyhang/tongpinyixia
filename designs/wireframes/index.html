@@ -68,6 +68,8 @@
     .nav strong { text-align: center; font-size: 15px; }
     .back { font-size: 25px; line-height: 1; }
     .brand { padding: 13px 0 12px; border-bottom: 1px solid var(--soft); font-weight: 750; }
+    .brand-title { display: flex; align-items: center; gap: 7px; }
+    .brand-badge { padding: 2px 6px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 9px; font-weight: 600; }
     .brand small { display: block; margin-top: 2px; color: var(--muted); font-weight: 400; font-size: 10px; }
     .content { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     .meta { align-self: center; margin: 20px 0 14px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 11px; }
@@ -81,7 +83,7 @@
     .choice { width: 100%; min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--ink); border-radius: 12px; background: white; text-align: left; font-weight: 700; cursor: pointer; }
     .choice b, .chip b { display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border: 1px solid var(--ink); border-radius: 50%; }
     .note { color: var(--muted); font-size: 11px; text-align: center; line-height: 1.6; }
-    .question-card .note { margin-top: 16px; }
+    .question-empathy { margin: 17px 0 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.6; }
     .result-top { padding: 17px 0 15px; text-align: center; border-bottom: 1px solid var(--soft); }
     .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 11px 6px 7px; border: 1px solid var(--line); border-radius: 999px; font-size: 11px; }
     .chip b { flex-basis: 23px; width: 23px; height: 23px; background: var(--soft); }
@@ -93,15 +95,17 @@
     .reason-block { padding: 16px 0 0; }
     .section-label { margin-bottom: 10px; font-size: 13px; font-weight: 700; }
     .quote { padding: 16px 16px 10px; background: #fafafa; }
+    .quote.reacted { border-color: var(--ink); background: #f1f1ec; }
     .quote-text { min-height: 56px; margin: 0; font-size: 17px; font-weight: 650; line-height: 1.65; }
     .quote-footer { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin-top: 9px; border-top: 1px solid var(--soft); }
     .quote-source { color: var(--muted); font-size: 10px; white-space: nowrap; }
     .quote-actions { align-self: flex-end; display: flex; align-items: center; gap: 3px; margin-top: -4px; }
     .text-action { min-height: 44px; padding: 0 7px; border: 0; color: var(--muted); background: transparent; font-size: 11px; font-weight: 650; cursor: pointer; }
-    .text-action.active { color: var(--ink); }
+    .text-action.active { color: white; background: var(--dark); border-radius: 7px; }
     .text-action:disabled { opacity: 1; cursor: default; }
     .resonance-count { min-height: 24px; color: var(--muted); font-size: 11px; text-align: center; }
     .resonance-count:not(:empty) { padding: 4px 8px; border-radius: 6px; background: var(--soft); }
+    .resonance-count.selected { color: var(--ink); font-weight: 650; background: #d9ebe8; }
     .btn { min-height: 48px; padding: 10px 13px; border: 1px solid var(--ink); border-radius: 10px; background: white; font-weight: 700; cursor: pointer; }
     .btn.primary { color: white; background: var(--dark); }
     .result-cta { margin-top: auto; padding-top: 14px; display: grid; gap: 9px; }
@@ -143,20 +147,20 @@
   <template id="question">
     <article class="phone"><div class="screen">
       <div class="status"><span>9:41</span><span>信号　电量</span></div>
-      <div class="brand">答案之外<small>选择之后，听见真实的想法</small></div>
+      <div class="brand"><div class="brand-title">答案之外<span class="brand-badge">匿名</span></div><small>选择之后，听见真实的想法</small></div>
       <div class="content"><div class="meta">今日一问 · 已有 128,672 人作答</div>
         <section class="card question-card"><div class="mark">?</div><p class="question-guide">如果是你，会怎么选？</p><h1>朋友失恋时，<br>你会怎么陪？</h1>
           <div class="choices"><button class="choice" data-go="combined"><b>A</b><span>陪他一起骂</span></button><button class="choice" data-go="combined"><b>B</b><span>认真分析问题</span></button></div>
-          <div class="note">匿名选择 · 无需解释</div>
+          <p class="question-empathy">想接住一个人的难过，本来就不只一种方式。</p>
         </section>
-      </div><div class="note">选择之后，你会看到有多少人和你一样。</div>
+      </div>
     </div></article>
   </template>
 
   <template id="combined">
     <article class="phone"><div class="screen">
       <div class="status"><span>9:41</span><span>信号　电量</span></div>
-      <div class="brand">答案之外<small>选择之后，听见真实的想法</small></div>
+      <div class="brand"><div class="brand-title">答案之外<span class="brand-badge">匿名</span></div><small>选择之后，听见真实的想法</small></div>
       <div class="content">
         <section class="result-top"><div class="chip"><b>A</b><span>你选择了「A 陪他一起骂」</span></div><div class="result-stat"><span>有</span><strong class="ratio">27<span>%</span></strong><span>的作答者</span></div><h2>和你选了一样</h2><p>来自本题 128,672 次有效作答</p></section>
         <section class="reason-block"><div class="section-label">相同的答案背后，会是相同的理由吗？</div>
@@ -166,7 +170,7 @@
             <div class="resonance-count" aria-live="polite"></div>
           </div>
         </section>
-        <div class="result-cta"><button class="btn primary" data-go="question">再看一道题</button><button class="btn" data-go="posting-empty">我也想说说为什么</button><div class="note">不展示身份 · 不建立联系 · 只留下真实想法</div></div>
+        <div class="result-cta"><button class="btn primary" data-go="question">再看一道题</button><button class="btn" data-go="posting-empty">我也想说说为什么</button></div>
       </div>
     </div></article>
   </template>
@@ -242,10 +246,12 @@
         const count = card.querySelector('.resonance-count');
 
         function renderReaction() {
+          card.classList.toggle('reacted', reacted);
           resonance.classList.toggle('active', reacted);
           resonance.setAttribute('aria-pressed', String(reacted));
           resonance.disabled = reacted;
           resonance.textContent = reacted ? '✓ 原来你也这样想' : '这句话说中了我';
+          count.classList.toggle('selected', reacted);
           count.textContent = reacted ? `还有 ${(reasons[index].count + 1).toLocaleString('zh-CN')} 人也被这句话戳中` : '';
         }
         resonance.addEventListener('click', () => {
