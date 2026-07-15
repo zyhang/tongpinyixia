@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>答案之外 · 安静夜间霓虹 v3</title>
+  <style>
+    :root {
+      --bg: #060910;
+      --surface: #0d1420;
+      --surface-2: #111c2a;
+      --ink: #f4f7fa;
+      --muted: #a8b3c1;
+      --line: rgba(137, 166, 189, .28);
+      --cyan: #55d2dc;
+      --pink: #eb72ad;
+      --violet: #9385f5;
+      --dark: #071218;
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+      --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+      --font: "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+    button, textarea { font: inherit; }
+    button { border: 0; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, textarea:focus-visible { outline: 2px solid #9ee8ed; outline-offset: 3px; }
+    button:disabled { cursor: default; }
+
+    .screen {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: calc(18px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 100% 12%, rgba(72, 205, 218, .10), transparent 32%),
+        radial-gradient(circle at 0 88%, rgba(235, 114, 173, .08), transparent 31%),
+        linear-gradient(155deg, #070b12 0%, #060912 55%, #070a10 100%);
+    }
+    .screen::before { content: ""; position: absolute; top: calc(106px + env(safe-area-inset-top)); left: 22px; right: 22px; height: 1px; background: linear-gradient(90deg, transparent, rgba(72, 205, 218, .28), transparent); }
+    .status { display: flex; justify-content: space-between; align-items: center; min-height: 24px; font-weight: 700; font-size: 12px; }
+    .status-icons { display: flex; gap: 6px; align-items: center; color: #dfe7eb; }
+    .signal { width: 15px; height: 9px; border: 1.5px solid currentColor; border-top: 0; border-radius: 0 0 3px 3px; }
+    .wifi { width: 11px; height: 11px; border: 1.5px solid currentColor; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; transform: rotate(-45deg); }
+    .battery { width: 18px; height: 9px; border: 1.5px solid currentColor; border-radius: 3px; box-shadow: inset -4px 0 0 currentColor; }
+    .brand { display: flex; align-items: center; gap: 9px; margin-top: 14px; padding-bottom: 12px; }
+    .wave { width: 30px; height: 19px; flex: 0 0 30px; }
+    .wave path { fill: none; stroke: var(--cyan); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .brand-name { display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 760; letter-spacing: .08em; }
+    .brand-badge { padding: 2px 6px; border: 1px solid rgba(156, 168, 183, .40); border-radius: 999px; color: var(--muted); font-size: 10px; font-weight: 650; letter-spacing: 0; }
+    .brand-sub { margin-top: 2px; color: var(--muted); font-size: 11.5px; letter-spacing: .05em; }
+    .main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+    .question-main { justify-content: flex-start; padding: 24px 0 16px; }
+    .question-meta { display: flex; justify-content: center; align-items: center; margin: 0 0 14px; color: var(--muted); font-size: 12px; }
+    .meta { padding: 7px 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(11, 19, 30, .8); }
+    .card { border: 1px solid transparent; border-radius: 22px; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(125deg, rgba(235, 114, 173, .72), rgba(72, 205, 218, .7)) border-box; }
+    .question-card { padding: 25px 19px 19px; box-shadow: 0 22px 55px rgba(0, 0, 0, .31); }
+    .question-mark { width: 40px; height: 40px; display: grid; place-items: center; margin: 0 auto 14px; border: 1px solid var(--cyan); border-radius: 50%; color: var(--cyan); font-size: 21px; }
+    .question-guide { margin: 0 0 8px; color: var(--muted); text-align: center; font-size: 12px; }
+    .question-title { margin: 0 0 22px; text-align: center; font-size: 26px; line-height: 1.38; letter-spacing: .01em; }
+    .choices { display: grid; gap: 11px; }
+    .choice { display: flex; align-items: center; gap: 12px; min-height: 59px; padding: 10px 14px; border: 1px solid rgba(126, 159, 183, .34); border-radius: 15px; color: var(--ink); background: #101a27; text-align: left; font-size: 16px; font-weight: 700; transition: transform 140ms var(--ease-out), border-color 160ms ease, background-color 160ms ease; }
+    .choice:active, .btn:active:not(:disabled), .text-action:active:not(:disabled), .back:active { transform: scale(.98); }
+    .choice b, .chip b { display: grid; place-items: center; flex: 0 0 31px; width: 31px; height: 31px; border-radius: 50%; font-size: 13px; }
+    .choice b { border: 1px solid rgba(156, 168, 183, .40); color: #dfe8ee; background: #1b2a38; }
+    .chip b { color: #fff; background: var(--pink); }
+    .question-empathy { margin: 16px 12px 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.65; }
+
+    .result-top { padding: 16px 0 14px; text-align: center; border-bottom: 1px solid rgba(137, 166, 189, .18); }
+    .chip { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 6px 11px 6px 7px; border: 1px solid var(--line); border-radius: 999px; color: #dfe6eb; font-size: 12px; background: rgba(10, 18, 28, .68); }
+    .chip b { width: 23px; height: 23px; flex-basis: 23px; font-size: 11px; }
+    .result-stat { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-top: 12px; font-size: 17px; font-weight: 700; }
+    .ratio { color: var(--cyan); font-size: 72px; font-weight: 800; line-height: 1; letter-spacing: -.06em; text-shadow: 0 0 28px rgba(72, 205, 218, .16); }
+    .ratio span { font-size: 30px; letter-spacing: -.03em; }
+    .result-top h1 { margin: 2px 0 0; font-size: 24px; }
+    .data-note { margin: 6px 0 0; color: #8996a6; font-size: 11.5px; letter-spacing: .01em; }
+    .reason-block { padding-top: 17px; }
+    .quote { padding: 16px 16px 11px; background: linear-gradient(145deg, rgba(20, 29, 42, .98), rgba(11, 19, 30, .98)) padding-box, linear-gradient(125deg, rgba(235, 114, 173, .62), rgba(72, 205, 218, .62)) border-box; }
+    .quote.reacted { background: linear-gradient(145deg, rgba(18, 34, 45, .98), rgba(10, 24, 34, .98)) padding-box, linear-gradient(125deg, rgba(72, 205, 218, .66), rgba(147, 133, 245, .56)) border-box; }
+    .quote-text { min-height: 54px; margin: 0; font-size: 16px; font-weight: 650; line-height: 1.62; transition: opacity 160ms ease, filter 160ms ease; }
+    .quote-text.is-switching { opacity: .28; filter: blur(2px); }
+    .quote-footer { display: flex; flex-direction: column; align-items: stretch; margin-top: 10px; padding-top: 9px; border-top: 1px solid rgba(137, 166, 189, .18); }
+    .quote-source { color: var(--muted); font-size: 12px; }
+    .quote-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; margin-top: 9px; }
+    .text-action { min-width: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 6px; border: 1px solid rgba(137, 166, 189, .32); border-radius: 10px; color: #e6edf2; background: #101925; font-size: 12.5px; font-weight: 650; line-height: 1.3; transition: transform 140ms var(--ease-out), color 160ms ease, border-color 160ms ease, background-color 160ms ease; }
+    .action-icon { flex: 0 0 auto; color: var(--cyan); font-size: 14px; }
+    .text-action.active { border-color: rgba(72, 205, 218, .64); color: #c8fbfd; background: rgba(72, 205, 218, .13); }
+    .text-action.active:disabled { opacity: 1; }
+    .resonance-count { min-height: 0; margin-top: 7px; color: #bdeff2; font-size: 12px; text-align: center; opacity: 0; transform: translateY(4px); transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out); }
+    .resonance-count.selected { min-height: 26px; padding: 5px 8px; border-radius: 7px; background: rgba(72, 205, 218, .12); opacity: 1; transform: translateY(0); }
+    .boundary { margin: 9px 2px 0; color: #8f9cab; font-size: 11.5px; text-align: center; line-height: 1.5; }
+    .actions { display: grid; gap: 9px; margin-top: auto; padding-top: 14px; }
+    .btn { min-height: 52px; padding: 0 16px; border: 1px solid var(--line); border-radius: 15px; color: var(--ink); background: #101924; font-weight: 700; letter-spacing: .03em; transition: transform 140ms var(--ease-out), color 160ms ease, border-color 160ms ease, background-color 160ms ease, opacity 160ms ease; }
+    .btn.primary { border: 0; color: #061318; background: linear-gradient(100deg, #69d8df, #43bed4); box-shadow: 0 12px 28px rgba(72, 205, 218, .14); }
+    .btn.tertiary { min-height: 46px; border-color: transparent; color: #bcc7d2; background: transparent; box-shadow: inset 0 0 0 1px rgba(137, 166, 189, .18); }
+    .btn:disabled { color: #8c9baa; border-color: rgba(156, 168, 183, .13); background: #162331; box-shadow: none; opacity: .72; }
+    .result-main .actions { padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+
+    .nav { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; min-height: 48px; border-bottom: 1px solid rgba(137, 166, 189, .18); }
+    .nav strong { text-align: center; font-size: 15px; }
+    .back { width: 44px; height: 44px; display: grid; place-items: center; margin-left: -10px; border-radius: 12px; color: #dfe7eb; background: transparent; font-size: 26px; line-height: 1; transition: transform 140ms var(--ease-out), background-color 160ms ease; }
+    .posting-choice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 25px 0 16px; font-size: 20px; font-weight: 700; }
+    .posting-choice strong { padding: 7px 11px; border-radius: 999px; color: #fff; background: linear-gradient(110deg, #d65e9f, #926fe1); font-size: 15px; }
+    .input-wrap { position: relative; min-height: 222px; border: 1px solid transparent; border-radius: 17px; background: linear-gradient(#0f1723, #0f1723) padding-box, linear-gradient(125deg, rgba(235, 114, 173, .72), rgba(72, 205, 218, .72)) border-box; }
+    .input { width: 100%; min-height: 220px; display: block; resize: none; padding: 17px 17px 42px; border: 0; border-radius: 16px; outline: 0; color: #eef3f7; background: transparent; font-size: 16px; line-height: 1.7; }
+    .input::placeholder { color: #98a6b5; }
+    .count { position: absolute; right: 15px; bottom: 13px; color: var(--muted); font-size: 12px; }
+    .posting-note { margin: 10px 2px 14px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .success { justify-content: center; text-align: center; }
+    .success-mark { width: 62px; height: 62px; display: grid; place-items: center; margin: 0 auto 20px; border: 1px solid var(--cyan); border-radius: 50%; color: var(--cyan); font-size: 29px; box-shadow: 0 0 36px rgba(72, 205, 218, .11); opacity: 1; transform: scale(1); transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out); }
+    @starting-style { .success-mark { opacity: 0; transform: scale(.95); } }
+    .success h1 { margin: 0 0 12px; font-size: 24px; }
+    .success p { max-width: 295px; margin: 0 auto; color: var(--muted); font-size: 13px; line-height: 1.75; }
+
+    .state-main { justify-content: center; text-align: center; }
+    .state-card { padding: 27px 20px 23px; }
+    .state-mark { width: 48px; height: 48px; display: grid; place-items: center; margin: 0 auto 17px; border: 1px solid rgba(72, 205, 218, .65); border-radius: 50%; color: var(--cyan); font-size: 20px; }
+    .state-card h1 { margin: 0 0 10px; font-size: 21px; line-height: 1.45; }
+    .state-card p { margin: 0 auto; max-width: 290px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .state-card .btn { width: 100%; margin-top: 22px; }
+
+    .gallery { padding: 35px; background: #11161e; }
+    .gallery h1 { color: #f5f7fb; }
+    .gallery > p { color: #aab4bf; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 22px; }
+    .gallery-item { color: #f5f7fb; }
+    .gallery-item h2 { font-size: 14px; }
+    .gallery-item p { min-height: 36px; color: #91a0ae; font-size: 12px; line-height: 1.5; }
+    .gallery iframe { width: 390px; height: 844px; border: 0; border-radius: 25px; transform: scale(.78); transform-origin: top left; margin-bottom: -185px; background: var(--bg); }
+
+    @media (hover: hover) and (pointer: fine) {
+      .choice:hover { border-color: rgba(72, 205, 218, .55); background: #132130; }
+      .text-action:hover, .btn.tertiary:hover, .back:hover { background-color: rgba(72, 205, 218, .08); }
+    }
+    @media (max-width: 360px) {
+      .screen { padding-left: 16px; padding-right: 16px; }
+      .screen::before { left: 16px; right: 16px; }
+      .quote-actions { grid-template-columns: 1fr; }
+      .ratio { font-size: 64px; }
+      .result-stat { gap: 6px; font-size: 15px; }
+      .posting-choice { font-size: 18px; }
+    }
+    @media (max-height: 700px) {
+      .screen { padding-top: calc(10px + env(safe-area-inset-top)); padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
+      .screen::before { top: calc(90px + env(safe-area-inset-top)); }
+      .brand { margin-top: 8px; padding-bottom: 8px; }
+      .brand-sub { display: none; }
+      .question-main { padding-top: 16px; }
+      .result-top { padding-top: 10px; padding-bottom: 10px; }
+      .ratio { font-size: 58px; }
+      .ratio span { font-size: 25px; }
+      .result-top h1 { font-size: 21px; }
+      .reason-block { padding-top: 11px; }
+      .quote { padding-top: 13px; }
+      .actions { position: static; padding-top: 11px; }
+      .result-main .actions { padding-bottom: 0; }
+      .input-wrap, .input { min-height: 180px; }
+      .posting-choice { margin-top: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      .choice, .btn, .text-action, .back, .resonance-count, .success-mark { transition-property: opacity, color, border-color, background-color !important; }
+      .choice:active, .btn:active:not(:disabled), .text-action:active:not(:disabled), .back:active { transform: none; }
+      .quote-text.is-switching { filter: none; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const status = `<div class="status"><span>9:41</span><div class="status-icons" aria-hidden="true"><i class="signal"></i><i class="wifi"></i><i class="battery"></i></div></div>`;
+    const brand = `<div class="brand"><svg class="wave" viewBox="0 0 32 18" aria-hidden="true"><path d="M1 10h5l2-7 4 14 4-11 4 7 3-6 3 3h5"/></svg><div><div class="brand-name">答案之外 <span class="brand-badge">匿名</span></div><div class="brand-sub">选择之后，听见真实的想法</div></div></div>`;
+    const boundary = `<p class="boundary">不需要认识，也可以理解一句话。</p>`;
+    const selections = {
+      A: {
+        label: "陪他一起骂",
+        ratio: 27,
+        reasons: [
+          { text: "有时候朋友需要的不是答案，是有人先站在他这边。", count: 286 },
+          { text: "先让他把委屈说完，比急着告诉他应该怎么办更重要。", count: 178 },
+          { text: "那一刻我想做的，只是让他知道自己不是一个人。", count: 126 }
+        ]
+      },
+      B: {
+        label: "认真分析问题",
+        ratio: 73,
+        reasons: [
+          { text: "陪他把事情理清楚，是想让他少在同一个地方难过。", count: 231 },
+          { text: "我不是急着讲道理，只是不想让他把所有错都揽在自己身上。", count: 169 },
+          { text: "等情绪缓一点，再一起看看以后怎样会对他更好。", count: 104 }
+        ]
+      }
+    };
+    let selectedOption = "A";
+
+    function resultTemplate(reacted = false) {
+      const selection = selections[selectedOption];
+      const reasons = selection.reasons;
+      const selectedClass = reacted ? " reacted" : "";
+      const pressed = reacted ? "true" : "false";
+      const disabled = reacted ? " disabled" : "";
+      const reactionText = reacted ? "<span class=\"action-icon\">✓</span>原来你也这样想" : "<span class=\"action-icon\">✦</span>这句话说中了我";
+      const count = reacted ? `<div class="resonance-count selected" aria-live="polite">还有 ${reasons[0].count.toLocaleString("zh-CN")} 人也被这句话打动</div>` : `<div class="resonance-count" aria-live="polite"></div>`;
+      return `<main class="screen">${status}${brand}<section class="main result-main"><div class="result-top"><div class="chip"><b>${selectedOption}</b><span>你选择了「${selectedOption} ${selection.label}」</span></div><div class="result-stat"><span>有</span><strong class="ratio">${selection.ratio}<span>%</span></strong><span>的作答者</span></div><h1>和你选了一样</h1><p class="data-note">基于 1,284 次作答</p></div><section class="reason-block"><div class="card quote${selectedClass}" data-reason-index="0"><p class="quote-text">“${reasons[0].text}”</p><div class="quote-footer"><span class="quote-source">一个同样选择的人，留了这句话。</span><div class="quote-actions"><button class="text-action reaction" type="button" aria-pressed="${pressed}"${disabled}>${reactionText}</button><button class="text-action next-reason" type="button"><span class="action-icon">↻</span>再看一种想法</button></div></div>${count}</div>${boundary}</section><div class="actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn tertiary" type="button" data-go="posting-empty">我也想说说为什么</button></div></section></main>`;
+    }
+
+    const templates = {
+      question: () => `<main class="screen">${status}${brand}<section class="main question-main"><div class="question-meta"><span class="meta">今日一问</span></div><div class="card question-card"><div class="question-mark" aria-hidden="true">?</div><p class="question-guide">如果是你，会怎么选？</p><h1 class="question-title">朋友失恋时，<br>你会怎么陪？</h1><div class="choices"><button class="choice" type="button" data-option="A" data-go="result"><b>A</b><span>陪他一起骂</span></button><button class="choice" type="button" data-option="B" data-go="result"><b>B</b><span>认真分析问题</span></button></div><p class="question-empathy">想接住一个人的难过，本来就不只一种方式。</p></div></section></main>`,
+      result: () => resultTemplate(false),
+      reacted: () => resultTemplate(true),
+      "posting-empty": () => postingTemplate(""),
+      "posting-ready": () => postingTemplate("有时候他需要的不是建议，而是有人先和他站在一起。"),
+      "posting-success": () => `<main class="screen">${status}<div class="nav"><span></span><strong>答案之外</strong><span></span></div><section class="main success"><div class="success-mark" aria-hidden="true">✓</div><h1>好啦，这句话飘出去了</h1><p>也许很快，也许过一阵，它会被某个同样选择的人碰见。随缘，不催。</p><div class="actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn tertiary" type="button">今天先到这，收工</button></div></section></main>`,
+      "sample-insufficient": () => stateTemplate("…", "答案还在慢慢聚集", "等更多人作答后，再回来看看。", "再看一道题", "question"),
+      "reason-insufficient": () => stateTemplate("◇", "这个答案背后，还没有足够多的真实理由", "我们宁愿暂时少展示，也不替任何人编造想法。", "再看一道题", "question"),
+      "load-failed": () => stateTemplate("↻", "暂时没能打开答案之外", "网络好像走神了一会儿。你的选择不会因此重复计算。", "再试一次", "result")
+    };
+
+    function postingTemplate(value) {
+      const selection = selections[selectedOption];
+      const escaped = value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      const disabled = value.trim() ? "" : " disabled";
+      return `<main class="screen">${status}<div class="nav"><button class="back" type="button" data-go="result" aria-label="返回选择结果">‹</button><strong>写下答案之外</strong><span></span></div><section class="main"><div class="posting-choice"><span>我选择</span><strong>${selection.label}</strong><span>，因为</span></div><div class="input-wrap"><textarea class="input" maxlength="60" placeholder="写下当时的想法" aria-label="写下选择这个答案的理由">${escaped}</textarea><span class="count" aria-live="polite">${value.length} / 60</span></div><p class="posting-note">一句真实的话就够了。</p><button class="btn primary submit-reason" type="button"${disabled}>让这句话飘进答案之外</button></section></main>`;
+    }
+
+    function stateTemplate(mark, title, description, button, target) {
+      return `<main class="screen">${status}${brand}<section class="main state-main"><div class="card state-card"><div class="state-mark" aria-hidden="true">${mark}</div><h1>${title}</h1><p>${description}</p><button class="btn primary" type="button" data-go="${target}">${button}</button></div></section></main>`;
+    }
+
+    function currentPage() { return new URLSearchParams(location.search).get("page") || "gallery"; }
+    function go(page) { history.replaceState({}, "", `?page=${page}`); render(page); }
+
+    function bindInteractions(page) {
+      document.querySelectorAll("[data-go]").forEach((element) => element.addEventListener("click", () => {
+        if (element.dataset.option) selectedOption = element.dataset.option;
+        go(element.dataset.go);
+      }));
+      const reaction = document.querySelector(".reaction:not(:disabled)");
+      if (reaction) reaction.addEventListener("click", () => {
+        reaction.disabled = true;
+        reaction.classList.add("active");
+        reaction.setAttribute("aria-pressed", "true");
+        reaction.innerHTML = `<span class="action-icon">✓</span>原来你也这样想`;
+        const quote = reaction.closest(".quote");
+        quote.classList.add("reacted");
+        const count = quote.querySelector(".resonance-count");
+        const reasonIndex = Number(quote.dataset.reasonIndex || 0);
+        count.textContent = `还有 ${selections[selectedOption].reasons[reasonIndex].count.toLocaleString("zh-CN")} 人也被这句话打动`;
+        count.classList.add("selected");
+      });
+
+      const nextReason = document.querySelector(".next-reason");
+      if (nextReason) {
+        const reasons = selections[selectedOption].reasons;
+        let index = 0;
+        nextReason.addEventListener("click", () => {
+          const copy = document.querySelector(".quote-text");
+          copy.classList.add("is-switching");
+          window.setTimeout(() => {
+            index = (index + 1) % reasons.length;
+            copy.textContent = `“${reasons[index].text}”`;
+            copy.classList.remove("is-switching");
+            const quote = copy.closest(".quote");
+            quote.dataset.reasonIndex = String(index);
+            const reactionButton = quote.querySelector(".reaction");
+            reactionButton.disabled = false;
+            reactionButton.classList.remove("active");
+            reactionButton.setAttribute("aria-pressed", "false");
+            reactionButton.innerHTML = `<span class="action-icon">✦</span>这句话说中了我`;
+            quote.classList.remove("reacted");
+            const count = quote.querySelector(".resonance-count");
+            count.textContent = "";
+            count.classList.remove("selected");
+          }, 160);
+        });
+      }
+
+      const textarea = document.querySelector("textarea");
+      if (textarea) {
+        const count = document.querySelector(".count");
+        const submit = document.querySelector(".submit-reason");
+        textarea.addEventListener("input", () => {
+          count.textContent = `${textarea.value.length} / 60`;
+          submit.disabled = textarea.value.trim().length === 0;
+        });
+        submit.addEventListener("click", () => { if (!submit.disabled) go("posting-success"); });
+      }
+    }
+
+    function render(page = currentPage()) {
+      if (page !== "gallery" && templates[page]) {
+        document.body.className = "";
+        document.body.innerHTML = templates[page]();
+        document.title = `答案之外 · ${page}`;
+        bindInteractions(page);
+        return;
+      }
+      const pages = [
+        ["question", "01 今日一问", "作答前不展示参与人数。"],
+        ["result", "02 选择结果＋答案之外", "比例、理由与下一题保持同页。"],
+        ["reacted", "02B 这句话说中了我", "反馈后才展示人数，且不可取消。"],
+        ["posting-empty", "03A 写下答案之外", "真实输入控件与稳定提交文案。"],
+        ["posting-ready", "03B 可以飘进去了", "填写完成后的可提交状态。"],
+        ["posting-success", "04 这句话飘出去了", "低压力收束，下一题仍是主操作。"],
+        ["sample-insufficient", "05A 样本不足", "没有可靠比例时诚实降级。"],
+        ["reason-insufficient", "05B 理由不足", "不以模板或 AI 内容填充真人理由。"],
+        ["load-failed", "05C 加载失败", "说明选择不会重复计算，并允许重试。"]
+      ];
+      document.body.className = "gallery";
+      document.body.innerHTML = `<h1>答案之外 · 安静夜间霓虹 v3</h1><p>可交互高保真 MVP · 预览中的人数仅用于展示正常数据状态。</p><div class="gallery-grid">${pages.map(([id, label, note]) => `<article class="gallery-item"><h2>${label}</h2><p>${note}</p><iframe src="?page=${id}" title="${label}"></iframe></article>`).join("")}</div>`;
+    }
+
+    window.addEventListener("popstate", () => render());
+    render();
+  </script>
+</body>
+</html>
