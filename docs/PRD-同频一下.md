@@ -314,15 +314,12 @@ Phase 2 才可能在理由页增加“我也想留一句”，并进入受控投
 
 ### 7.2 UX 与原型
 
-当前已有四套视觉方向：温暖手写、安静编辑部、轻实验装置、柔和数字原生。MVP 建议以“温暖手写”为默认评审基线，因为它与“轻量、真实、低压力”的产品定位最一致；最终方向需经过可读性和平台适配评审。
+此前输出的多套高保真视觉稿已经与当前产品定位和实际页面流程不一致，因此不再作为设计或验收依据。当前先以 MVP 线框图确认页面结构、内容层级和交互路径；新的高保真方案应在实际实现约束确认后重新制作，并经过可读性和平台适配评审。
 
-现有原型：
+当前设计基线：
 
-- [页面 01：遇见问题](designs/previews/warm-handwritten/01-question.png)
-- [页面 02：看见同类](designs/previews/warm-handwritten/02-result.png)
-- [页面 03：一句同频理由](designs/previews/warm-handwritten/03-reason.png)
-- [页面 04：分享回声卡](designs/previews/warm-handwritten/04-share-card.png)
-- [四套视觉方向总览](designs/style-directions.png)
+- [MVP 全流程线框图](../designs/wireframes/all-pages.png)
+- [可交互线框图源文件](../designs/wireframes/index.html)
 
 #### 7.2.1 页面 01：遇见问题
 

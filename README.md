@@ -22,7 +22,7 @@
 tongpin/
 ├── docs/              ← 产品需求文档（PRD）
 ├── 题库/              ← 首期题目及设计标准
-├── designs/           ← 设计素材（预览、线框图、源文件、流程图）
+├── designs/           ← 设计素材（线框图、图标、源文件）
 ├── .gitignore
 └── README.md          ← 本文件
 ```
@@ -34,8 +34,8 @@ tongpin/
 | 理解完整产品设计 | [docs/PRD-同频一下.md](docs/PRD-同频一下.md) |
 | 查看/评审题目 | [题库/首期题库.csv](题库/首期题库.csv) |
 | 了解好题标准 | [题库/好题标准.md](题库/好题标准.md) |
-| 浏览视觉方向 | [designs/style-directions.png](designs/style-directions.png) |
-| 查看页面原型 | [designs/previews/](designs/previews/) 各方向子目录 |
+| 查看 MVP 页面结构 | [designs/wireframes/all-pages.png](designs/wireframes/all-pages.png) |
+| 浏览小程序图标候选 | [designs/icons/](designs/icons/) |
 
 ## 发布门禁
 
