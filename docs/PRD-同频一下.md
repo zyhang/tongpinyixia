@@ -6,6 +6,8 @@
 > 源文档：[飞书原文](https://uc0ss5wryl.feishu.cn/docx/APstd09bsoUvbWx19z1cxP1Nnoh)  
 > 产品阶段：Phase 0，能力确认与素材准备  
 > 一句话定义：在抖音信息流中，用一道没有标准答案的轻问题，让用户看见真实群体比例，并读到一条经授权、已审核的同选理由，获得一次短暂、安全、无社交压力的共鸣。
+>
+> **当前口径说明**：本文保留为历史实验预注册与需求研究资料，不再单独代表当前 MVP 实施范围。当前产品定位、功能边界和交互主路径以 [《答案之外｜产品理念与 MVP 设计准则》](./产品理念与MVP设计准则.md) 为准，页面文案以 [《答案之外｜品牌文案规范》](./答案之外-品牌文案规范.md) 为准；发生冲突时以后两者为准。
 
 ---
 
@@ -314,15 +316,14 @@ Phase 2 才可能在理由页增加“我也想留一句”，并进入受控投
 
 ### 7.2 UX 与原型
 
-当前已有四套视觉方向：温暖手写、安静编辑部、轻实验装置、柔和数字原生。MVP 建议以“温暖手写”为默认评审基线，因为它与“轻量、真实、低压力”的产品定位最一致；最终方向需经过可读性和平台适配评审。
+此前输出的多套高保真视觉稿已经与当前产品定位和实际页面流程不一致，因此不再作为设计或验收依据。当前以 MVP 线框图确认页面结构、内容层级和交互路径，并已按当前主循环重新制作一套高保真基线；后续改动需同步维护两者，并经过可读性和平台适配评审。
 
-现有原型：
+当前设计基线：
 
-- [页面 01：遇见问题](designs/previews/warm-handwritten/01-question.png)
-- [页面 02：看见同类](designs/previews/warm-handwritten/02-result.png)
-- [页面 03：一句同频理由](designs/previews/warm-handwritten/03-reason.png)
-- [页面 04：分享回声卡](designs/previews/warm-handwritten/04-share-card.png)
-- [四套视觉方向总览](designs/style-directions.png)
+- [MVP 全流程线框图](../designs/wireframes/all-pages.png)
+- [可交互线框图源文件](../designs/wireframes/index.html)
+- [当前高保真全流程总览](../designs/high-fidelity/flow-overview.png)
+- [高保真页面源文件](../designs/high-fidelity/index.html)
 
 #### 7.2.1 页面 01：遇见问题
 
