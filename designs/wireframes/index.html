@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>同频一下 · 全流程线框图</title>
+  <title>答案之外 · MVP 线框图</title>
   <style>
     * { box-sizing: border-box; }
     :root {
@@ -76,6 +76,7 @@
     .question-card .mark { width: 38px; height: 38px; display: grid; place-items: center; margin: 0 auto 18px; border: 1px solid var(--ink); border-radius: 50%; }
     h1 { letter-spacing: .01em; }
     .question-card h1 { margin: 0 0 24px; text-align: center; font-size: 25px; line-height: 1.4; }
+    .question-guide { margin: 0 0 8px; color: var(--muted); text-align: center; font-size: 12px; }
     .choices { display: grid; gap: 11px; }
     .choice { width: 100%; min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--ink); border-radius: 12px; background: white; text-align: left; font-weight: 700; cursor: pointer; }
     .choice b, .chip b { display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border: 1px solid var(--ink); border-radius: 50%; }
@@ -84,51 +85,39 @@
     .result-top { padding: 17px 0 15px; text-align: center; border-bottom: 1px solid var(--soft); }
     .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 11px 6px 7px; border: 1px solid var(--line); border-radius: 999px; font-size: 11px; }
     .chip b { flex-basis: 23px; width: 23px; height: 23px; background: var(--soft); }
-    .result-top h1 { margin: 12px 0 0; font-size: 19px; }
-    .ratio { margin: 0; font-size: 66px; line-height: 1.05; font-weight: 800; }
+    .result-stat { display: flex; align-items: baseline; justify-content: center; gap: 9px; margin-top: 12px; font-size: 18px; font-weight: 700; }
+    .ratio { font-size: 72px; line-height: 1; font-weight: 800; letter-spacing: -.04em; }
     .ratio span { font-size: 30px; }
-    .result-top h2 { margin: 0; font-size: 22px; }
+    .result-top h2 { margin: 3px 0 0; font-size: 24px; }
     .result-top p { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
     .reason-block { padding: 16px 0 0; }
-    .section-label { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 13px; font-weight: 700; }
-    .section-label small { color: var(--muted); font-weight: 400; }
-    .quote { padding: 18px; background: #fafafa; font-size: 17px; font-weight: 650; line-height: 1.65; }
-    .quote small { display: block; margin-top: 12px; color: var(--muted); font-size: 10px; font-weight: 400; }
-    .mini-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 10px; }
+    .section-label { margin-bottom: 10px; font-size: 13px; font-weight: 700; }
+    .quote { padding: 16px 16px 10px; background: #fafafa; }
+    .quote-text { min-height: 56px; margin: 0; font-size: 17px; font-weight: 650; line-height: 1.65; }
+    .quote-footer { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin-top: 9px; border-top: 1px solid var(--soft); }
+    .quote-source { color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .quote-actions { align-self: flex-end; display: flex; align-items: center; gap: 3px; margin-top: -4px; }
+    .text-action { min-height: 44px; padding: 0 7px; border: 0; color: var(--muted); background: transparent; font-size: 11px; font-weight: 650; cursor: pointer; }
+    .text-action.active { color: var(--ink); }
+    .text-action:disabled { opacity: 1; cursor: default; }
+    .resonance-count { min-height: 24px; color: var(--muted); font-size: 11px; text-align: center; }
+    .resonance-count:not(:empty) { padding: 4px 8px; border-radius: 6px; background: var(--soft); }
     .btn { min-height: 48px; padding: 10px 13px; border: 1px solid var(--ink); border-radius: 10px; background: white; font-weight: 700; cursor: pointer; }
     .btn.primary { color: white; background: var(--dark); }
     .result-cta { margin-top: auto; padding-top: 14px; display: grid; gap: 9px; }
     .result-cta .btn { min-height: 52px; }
-    .step { margin: 15px 0 10px; color: var(--muted); font-size: 11px; }
-    .echo h1 { margin: 16px 0 5px; font-size: 23px; }
-    .guidance { margin: 0 0 14px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .posting-choice { display: flex; align-items: center; gap: 8px; margin: 24px 0 12px; font-size: 18px; font-weight: 700; }
+    .posting-choice strong { padding: 7px 11px; border-radius: 999px; color: white; background: var(--dark); font-size: 15px; }
     .input { position: relative; min-height: 210px; padding: 17px; border: 1px solid var(--ink); border-radius: 14px; }
-    .input strong { display: block; margin-bottom: 15px; font-size: 14px; }
     .placeholder { color: #969696; font-size: 16px; }
     .value { font-size: 16px; line-height: 1.7; }
     .count { position: absolute; right: 15px; bottom: 13px; color: var(--muted); font-size: 11px; }
-    .rules { display: flex; justify-content: space-between; gap: 12px; margin: 8px 2px 12px; color: var(--muted); font-size: 10px; }
-    .hint { padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 11px; line-height: 1.5; }
-    .consent { display: flex; gap: 9px; margin: 14px 2px; color: var(--muted); font-size: 11px; line-height: 1.5; }
-    .check { flex: 0 0 19px; width: 19px; height: 19px; border: 1px solid var(--ink); border-radius: 4px; text-align: center; }
-    .check.on { color: white; background: var(--dark); }
+    .posting-note { margin: 10px 2px 14px; color: var(--muted); font-size: 11px; line-height: 1.6; }
     .disabled { color: #999; border-color: #d2d2d2; background: #ededed; }
     .success { justify-content: center; text-align: center; }
     .success-mark { width: 62px; height: 62px; display: grid; place-items: center; margin: 0 auto 20px; border: 2px solid var(--ink); border-radius: 50%; font-size: 28px; }
-    .success h1 { margin: 0 0 9px; font-size: 25px; }
-    .success > p { margin: 0 auto 22px; max-width: 290px; color: var(--muted); font-size: 12px; line-height: 1.7; }
-    .summary { padding: 15px; text-align: left; }
-    .summary small { color: var(--muted); }
-    .summary p { margin: 8px 0 0; font-size: 14px; line-height: 1.6; }
-    .success .result-cta { margin-top: 18px; }
-    .share { text-align: center; }
-    .share h1 { margin: 25px 0 15px; font-size: 22px; }
-    .share-card { flex: 1; padding: 30px 24px 22px; display: flex; flex-direction: column; justify-content: center; border: 2px solid var(--ink); border-radius: 18px; }
-    .share-card .ratio { margin: 12px 0 2px; }
-    .share-card h2 { margin: 0; font-size: 25px; line-height: 1.45; }
-    .share-card p { margin: 20px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
-    .share-card small { margin-top: auto; color: var(--muted); }
-    .share .mini-actions { margin-top: 14px; }
+    .success h1 { margin: 0 0 12px; font-size: 24px; line-height: 1.4; }
+    .success > p { margin: 0 auto 12px; max-width: 290px; color: var(--muted); font-size: 12px; line-height: 1.7; }
     .caption { max-width: 390px; margin: 10px auto 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
     .preview-mode { min-height: 100vh; display: grid; place-items: center; background: #d9d9d4; }
     .preview-mode .phone { width: min(390px, 100vw); height: min(844px, 100vh); border-radius: 0; border: 0; box-shadow: none; }
@@ -140,13 +129,13 @@
   <main class="board" id="board">
     <header class="board-head">
       <div>
-        <h1>同频一下 · 全流程线框图</h1>
-        <p>本轮只确认页面结构、内容层级和点击路径，不代表最终视觉。02 已将“同频度”与“匿名同频理由”合并，用户作答后直接看到两类信息。</p>
+        <h1>答案之外 · MVP 线框图</h1>
+        <p>选择一个更像你的答案，看看有多少人和你一样，再听听他们为什么这样选。</p>
       </div>
-      <div class="decision"><strong>本轮核心决策</strong><br>删除“看看他们怎么想”的中间点击：选择答案后进入合并结果页，比例与理由在同一屏连续呈现。</div>
+      <div class="decision"><strong>品牌主张</strong><br>答案只有两个，理由远不止两种。</div>
     </header>
     <nav class="flow" aria-label="核心流程">
-      <b>01 选择答案</b><span>→</span><b>02 比例＋理由</b><span>→</span><b>03 留下回声</b><span>→</span><b>04 提交成功</b><span>→</span><b>05 分享</b>
+      <b>MVP 主循环</b><span>01 选择答案 → 02 选择结果＋真实理由 → 再看一道题 ↺</span><b>可选支线</b><span>02 → 我也想说说为什么 → 让这句话飘进答案之外</span>
     </nav>
     <section class="grid" id="grid"></section>
   </main>
@@ -154,96 +143,124 @@
   <template id="question">
     <article class="phone"><div class="screen">
       <div class="status"><span>9:41</span><span>信号　电量</span></div>
-      <div class="brand">〰 同频一下<small>一次轻量的匿名共鸣实验</small></div>
-      <div class="content"><div class="meta">今日共鸣实验 · 128,672 人已回答</div>
-        <section class="card question-card"><div class="mark">?</div><h1>朋友失恋时，<br>你会怎么陪？</h1>
+      <div class="brand">答案之外<small>选择之后，听见真实的想法</small></div>
+      <div class="content"><div class="meta">今日一问 · 已有 128,672 人作答</div>
+        <section class="card question-card"><div class="mark">?</div><p class="question-guide">如果是你，会怎么选？</p><h1>朋友失恋时，<br>你会怎么陪？</h1>
           <div class="choices"><button class="choice" data-go="combined"><b>A</b><span>陪他一起骂</span></button><button class="choice" data-go="combined"><b>B</b><span>认真分析问题</span></button></div>
-          <div class="note">匿名选择 · 无需填写理由</div>
+          <div class="note">匿名选择 · 无需解释</div>
         </section>
-      </div><div class="note">没有标准答案，只想知道此刻的你会怎么选</div>
+      </div><div class="note">选择之后，你会看到有多少人和你一样。</div>
     </div></article>
   </template>
 
   <template id="combined">
     <article class="phone"><div class="screen">
       <div class="status"><span>9:41</span><span>信号　电量</span></div>
-      <div class="brand">〰 同频一下<small>一次轻量的匿名共鸣实验</small></div>
+      <div class="brand">答案之外<small>选择之后，听见真实的想法</small></div>
       <div class="content">
-        <section class="result-top"><div class="chip"><b>A</b><span>你选择了「陪他一起骂」</span></div><h1>全国有</h1><div class="ratio">27<span>%</span></div><h2>的人和你一样</h2><p>基于 128,672 份匿名选择</p></section>
-        <section class="reason-block"><div class="section-label"><span>一个同样选择 A 的人这样想</span><small>匿名理由</small></div>
-          <div class="card quote">“有时候朋友需要的不是答案，是有人先站在他这边。”<small>已审核理由库 · 非实时匹配</small></div>
-          <div class="mini-actions"><button class="btn">这句话有共鸣</button><button class="btn">换一句</button></div>
+        <section class="result-top"><div class="chip"><b>A</b><span>你选择了「A 陪他一起骂」</span></div><div class="result-stat"><span>有</span><strong class="ratio">27<span>%</span></strong><span>的作答者</span></div><h2>和你选了一样</h2><p>来自本题 128,672 次有效作答</p></section>
+        <section class="reason-block"><div class="section-label">相同的答案背后，会是相同的理由吗？</div>
+          <div class="card quote">
+            <p class="quote-text">“有时候朋友需要的不是答案，是有人先站在他这边。”</p>
+            <div class="quote-footer"><span class="quote-source">来自已授权匿名理由库 · 非实时匹配</span><div class="quote-actions"><button class="text-action resonance-action" type="button" aria-pressed="false">这句话说中了我</button><button class="text-action refresh-action" type="button">再看一种想法</button></div></div>
+            <div class="resonance-count" aria-live="polite"></div>
+          </div>
         </section>
-        <div class="result-cta"><button class="btn primary" data-go="echo-empty">我也留下一句理由</button><button class="btn" data-go="share">生成我的同频卡</button></div>
+        <div class="result-cta"><button class="btn primary" data-go="question">再看一道题</button><button class="btn" data-go="posting-empty">我也想说说为什么</button><div class="note">不展示身份 · 不建立联系 · 只留下真实想法</div></div>
       </div>
     </div></article>
   </template>
 
-  <template id="echo-empty">
-    <article class="phone"><div class="screen echo">
-      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span class="back">‹</span><strong>留下共鸣回声</strong><span></span></div>
-      <div class="content"><div class="step">写下理由 · 提交后需审核</div><div><span class="chip"><b>A</b><span>我选择了「陪他一起骂」</span></span></div>
-        <h1>为什么你会这样选择？</h1><p class="guidance">只写真实原因，不需要讲完整故事；以后做出相同选择的人可能会看到。</p>
-        <div class="input"><strong>我选择陪他一起骂，因为</strong><span class="placeholder">从这里开始写你的理由</span><span class="count">0 / 60</span></div>
-        <div class="rules"><span>需填写 10–60 字</span><span>不写可识别信息</span></div><div class="hint"><strong>参考表达：</strong>说清楚“为什么”，示例不会自动成为投稿。</div>
-        <div class="consent"><span class="check"></span><span>我同意审核通过后，以匿名形式展示给做出相同选择的人。</span></div>
-        <button class="btn disabled" data-go="echo-ready">填写至少 10 字后提交</button>
-      </div>
-    </div></article>
-  </template>
-
-  <template id="echo-ready">
-    <article class="phone"><div class="screen echo">
-      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span class="back">‹</span><strong>留下共鸣回声</strong><span></span></div>
-      <div class="content"><div class="step">确认理由与匿名授权</div><div><span class="chip"><b>A</b><span>我选择了「陪他一起骂」</span></span></div>
-        <h1>为什么你会这样选择？</h1><p class="guidance">只写真实原因，不需要讲完整故事；以后做出相同选择的人可能会看到。</p>
-        <div class="input"><strong>我选择陪他一起骂，因为</strong><span class="value">有时候他需要的不是建议，而是有人先和他站在一起。</span><span class="count">26 / 60</span></div>
-        <div class="rules"><span>字数符合要求</span><span>未检测到可识别信息</span></div><div class="hint"><strong>提交后：</strong>先进入审核，不会立刻公开；仍可撤回授权。</div>
-        <div class="consent"><span class="check on">✓</span><span>我同意审核通过后，以匿名形式展示给做出相同选择的人。</span></div>
-        <button class="btn primary" data-go="success">匿名提交这句话</button>
-      </div>
-    </div></article>
-  </template>
-
-  <template id="success">
+  <template id="posting-empty">
     <article class="phone"><div class="screen">
-      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span></span><strong>留下共鸣回声</strong><span></span></div>
-      <div class="content success"><div class="success-mark">✓</div><h1>这句话已收到</h1><p>审核通过后，它可能成为某个人今天看到的同频理由。我们不会承诺一定展示。</p>
-        <div class="card summary"><small>你提交的匿名理由</small><p>“有时候他需要的不是建议，而是有人先和他站在一起。”</p></div>
-        <div class="result-cta"><button class="btn primary" data-go="share">完成并查看同频卡</button><button class="btn">查看我的授权</button></div>
-      </div><div class="note">审核前不会进入理由池 · 可随时撤回授权</div>
+      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span class="back">‹</span><strong>写下答案之外</strong><span></span></div>
+      <div class="content"><div class="posting-choice"><span>我选择</span><strong>陪他一起骂</strong><span>，因为</span></div>
+        <div class="input"><span class="placeholder">写下当时的想法</span><span class="count">0 / 60</span></div>
+        <p class="posting-note">一句真实的话就够了。</p>
+        <button class="btn disabled" data-go="posting-ready">再写一点，就能让它飘走</button>
+      </div>
     </div></article>
   </template>
 
-  <template id="share">
-    <article class="phone"><div class="screen share">
-      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="brand">〰 同频一下<small>一次轻量的匿名共鸣实验</small></div>
-      <div class="content"><h1>今日同频选择</h1><section class="share-card"><span>今天，我和</span><div class="ratio">27<span>%</span></div><h2>的人<br>站在朋友这边</h2><p>陪伴有时不是解决问题，<br>而是先让对方不孤单。</p><small>2026.07.15　·　同频一下</small></section>
-        <div class="mini-actions"><button class="btn">保存图片</button><button class="btn primary">分享朋友</button></div>
-      </div><div class="note">只包含我的选择与群体比例</div>
+  <template id="posting-ready">
+    <article class="phone"><div class="screen">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span class="back">‹</span><strong>写下答案之外</strong><span></span></div>
+      <div class="content"><div class="posting-choice"><span>我选择</span><strong>陪他一起骂</strong><span>，因为</span></div>
+        <div class="input"><span class="value">有时候他需要的不是建议，而是有人先和他站在一起。</span><span class="count">26 / 60</span></div>
+        <p class="posting-note">一句真实的话就够了。</p>
+        <button class="btn primary" data-go="posting-success">让这句话飘进答案之外</button>
+      </div>
+    </div></article>
+  </template>
+
+  <template id="posting-success">
+    <article class="phone"><div class="screen">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span></span><strong>答案之外</strong><span></span></div>
+      <div class="content success"><div class="success-mark">✓</div><h1>好啦，这句话飘出去了</h1>
+        <p>也许很快，也许过一阵，它会被某个同样选择的人碰见。随缘，不催。</p>
+        <div class="result-cta"><button class="btn primary" data-go="question">再看一道题</button><button class="btn">今天先到这，收工</button></div>
+      </div>
     </div></article>
   </template>
 
   <script>
     const screens = [
-      ['question', '01 遇见问题', '选择后直接进入合并结果页。'],
-      ['combined', '02 同频结果＋匿名理由', '核心合并页：比例与理由无需二次点击。'],
-      ['echo-empty', '03A 留下回声 · 空态', '展示真实输入框、规则和授权。'],
-      ['echo-ready', '03B 留下回声 · 可提交', '同一页面的完成输入状态。'],
-      ['success', '04 提交成功', '明确审核状态与后续去向。'],
-      ['share', '05 分享同频卡', '只分享选择和比例，不分享投稿理由。']
+      ['question', '01 今日一问', '选择后，直接看到本题的真实比例与理由。'],
+      ['combined', '02 选择结果＋答案之外', '选择结果与真实理由在同一页呈现。'],
+      ['combined-reacted', '02B 这句话说中了我', '点击后才显示有多少人也被这句话打动。'],
+      ['posting-empty', '03A 写下答案之外 · 空态', '可选入口，不阻断再看一道题。'],
+      ['posting-ready', '03B 写下答案之外 · 可以放进去', '一句话写好后，就能轻轻放进答案之外。'],
+      ['posting-success', '04 这句话飘出去了', '随缘被同样选择的人碰见，轻松结束本次体验。']
     ];
     const params = new URLSearchParams(location.search);
     const current = params.get('screen');
 
     function cloneScreen(id) {
-      return document.getElementById(id).content.firstElementChild.cloneNode(true);
+      const templateId = id === 'combined-reacted' ? 'combined' : id;
+      const screen = document.getElementById(templateId).content.firstElementChild.cloneNode(true);
+      if (id === 'combined-reacted') screen.dataset.initialReacted = 'true';
+      return screen;
     }
     function openScreen(id) {
       location.href = `${location.pathname}?screen=${id}`;
     }
     function bindNavigation(root) {
       root.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => openScreen(button.dataset.go)));
+    }
+    function bindReasonInteractions(root) {
+      const reasons = [
+        { text: '“有时候朋友需要的不是答案，是有人先站在他这边。”', count: 1283 },
+        { text: '“先陪他把气撒完吧，道理可以晚点再讲。”', count: 935 },
+        { text: '“他已经够难受了，这时候站队比复盘重要。”', count: 2116 }
+      ];
+      root.querySelectorAll('.quote').forEach(card => {
+        let index = 0;
+        let reacted = card.closest('[data-initial-reacted="true"]') !== null;
+        const copy = card.querySelector('.quote-text');
+        const resonance = card.querySelector('.resonance-action');
+        const refresh = card.querySelector('.refresh-action');
+        const count = card.querySelector('.resonance-count');
+
+        function renderReaction() {
+          resonance.classList.toggle('active', reacted);
+          resonance.setAttribute('aria-pressed', String(reacted));
+          resonance.disabled = reacted;
+          resonance.textContent = reacted ? '✓ 原来你也这样想' : '这句话说中了我';
+          count.textContent = reacted ? `还有 ${(reasons[index].count + 1).toLocaleString('zh-CN')} 人也被这句话戳中` : '';
+        }
+        resonance.addEventListener('click', () => {
+          if (reacted) return;
+          reacted = true;
+          renderReaction();
+        });
+        refresh.addEventListener('click', () => {
+          index = (index + 1) % reasons.length;
+          reacted = false;
+          copy.textContent = reasons[index].text;
+          renderReaction();
+        });
+        renderReaction();
+      });
     }
 
     if (current && screens.some(([id]) => id === current)) {
@@ -252,6 +269,7 @@
       document.body.innerHTML = '';
       document.body.appendChild(phone);
       bindNavigation(document.body);
+      bindReasonInteractions(document.body);
     } else {
       const grid = document.getElementById('grid');
       screens.forEach(([id, title, caption]) => {
@@ -263,6 +281,7 @@
         grid.appendChild(item);
       });
       bindNavigation(grid);
+      bindReasonInteractions(grid);
     }
   </script>
 </body>
