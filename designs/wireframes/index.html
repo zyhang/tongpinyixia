@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>同频一下 · 全流程线框图</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --paper: #f4f4f1;
+      --panel: #fff;
+      --ink: #171717;
+      --muted: #686868;
+      --line: #b8b8b2;
+      --soft: #e9e9e4;
+      --dark: #262626;
+    }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      color: var(--ink);
+      background: var(--paper);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+    button, a { font: inherit; }
+    button { color: inherit; }
+    .board { max-width: 1640px; margin: 0 auto; padding: 42px 34px 70px; }
+    .board-head { display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: end; margin-bottom: 30px; }
+    .board-head h1 { margin: 0 0 8px; font-size: 32px; }
+    .board-head p { max-width: 760px; margin: 0; color: var(--muted); line-height: 1.7; }
+    .decision {
+      max-width: 470px;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .flow b { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); background: var(--panel); }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(340px, 1fr)); gap: 34px 28px; align-items: start; }
+    .frame-item { min-width: 0; }
+    .frame-title { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0 auto 10px; max-width: 390px; }
+    .frame-title h2 { margin: 0; font-size: 17px; }
+    .frame-title a { color: var(--muted); font-size: 12px; }
+    .phone {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 36px;
+      background: var(--panel);
+      box-shadow: 0 12px 32px rgba(0,0,0,.08);
+    }
+    .screen { height: 100%; padding: 18px 20px 22px; display: flex; flex-direction: column; }
+    .status { display: flex; justify-content: space-between; height: 24px; font-size: 12px; font-weight: 700; }
+    .nav { display: grid; grid-template-columns: 32px 1fr 32px; align-items: center; min-height: 48px; border-bottom: 1px solid var(--soft); }
+    .nav strong { text-align: center; font-size: 15px; }
+    .back { font-size: 25px; line-height: 1; }
+    .brand { padding: 13px 0 12px; border-bottom: 1px solid var(--soft); font-weight: 750; }
+    .brand small { display: block; margin-top: 2px; color: var(--muted); font-weight: 400; font-size: 10px; }
+    .content { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .meta { align-self: center; margin: 20px 0 14px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 11px; }
+    .card { border: 1px solid var(--ink); border-radius: 16px; background: var(--panel); }
+    .question-card { margin: auto 0; padding: 28px 18px 20px; }
+    .question-card .mark { width: 38px; height: 38px; display: grid; place-items: center; margin: 0 auto 18px; border: 1px solid var(--ink); border-radius: 50%; }
+    h1 { letter-spacing: .01em; }
+    .question-card h1 { margin: 0 0 24px; text-align: center; font-size: 25px; line-height: 1.4; }
+    .choices { display: grid; gap: 11px; }
+    .choice { width: 100%; min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--ink); border-radius: 12px; background: white; text-align: left; font-weight: 700; cursor: pointer; }
+    .choice b, .chip b { display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border: 1px solid var(--ink); border-radius: 50%; }
+    .note { color: var(--muted); font-size: 11px; text-align: center; line-height: 1.6; }
+    .question-card .note { margin-top: 16px; }
+    .result-top { padding: 17px 0 15px; text-align: center; border-bottom: 1px solid var(--soft); }
+    .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 11px 6px 7px; border: 1px solid var(--line); border-radius: 999px; font-size: 11px; }
+    .chip b { flex-basis: 23px; width: 23px; height: 23px; background: var(--soft); }
+    .result-top h1 { margin: 12px 0 0; font-size: 19px; }
+    .ratio { margin: 0; font-size: 66px; line-height: 1.05; font-weight: 800; }
+    .ratio span { font-size: 30px; }
+    .result-top h2 { margin: 0; font-size: 22px; }
+    .result-top p { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+    .reason-block { padding: 16px 0 0; }
+    .section-label { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 13px; font-weight: 700; }
+    .section-label small { color: var(--muted); font-weight: 400; }
+    .quote { padding: 18px; background: #fafafa; font-size: 17px; font-weight: 650; line-height: 1.65; }
+    .quote small { display: block; margin-top: 12px; color: var(--muted); font-size: 10px; font-weight: 400; }
+    .mini-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 10px; }
+    .btn { min-height: 48px; padding: 10px 13px; border: 1px solid var(--ink); border-radius: 10px; background: white; font-weight: 700; cursor: pointer; }
+    .btn.primary { color: white; background: var(--dark); }
+    .result-cta { margin-top: auto; padding-top: 14px; display: grid; gap: 9px; }
+    .result-cta .btn { min-height: 52px; }
+    .step { margin: 15px 0 10px; color: var(--muted); font-size: 11px; }
+    .echo h1 { margin: 16px 0 5px; font-size: 23px; }
+    .guidance { margin: 0 0 14px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .input { position: relative; min-height: 210px; padding: 17px; border: 1px solid var(--ink); border-radius: 14px; }
+    .input strong { display: block; margin-bottom: 15px; font-size: 14px; }
+    .placeholder { color: #969696; font-size: 16px; }
+    .value { font-size: 16px; line-height: 1.7; }
+    .count { position: absolute; right: 15px; bottom: 13px; color: var(--muted); font-size: 11px; }
+    .rules { display: flex; justify-content: space-between; gap: 12px; margin: 8px 2px 12px; color: var(--muted); font-size: 10px; }
+    .hint { padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .consent { display: flex; gap: 9px; margin: 14px 2px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .check { flex: 0 0 19px; width: 19px; height: 19px; border: 1px solid var(--ink); border-radius: 4px; text-align: center; }
+    .check.on { color: white; background: var(--dark); }
+    .disabled { color: #999; border-color: #d2d2d2; background: #ededed; }
+    .success { justify-content: center; text-align: center; }
+    .success-mark { width: 62px; height: 62px; display: grid; place-items: center; margin: 0 auto 20px; border: 2px solid var(--ink); border-radius: 50%; font-size: 28px; }
+    .success h1 { margin: 0 0 9px; font-size: 25px; }
+    .success > p { margin: 0 auto 22px; max-width: 290px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .summary { padding: 15px; text-align: left; }
+    .summary small { color: var(--muted); }
+    .summary p { margin: 8px 0 0; font-size: 14px; line-height: 1.6; }
+    .success .result-cta { margin-top: 18px; }
+    .share { text-align: center; }
+    .share h1 { margin: 25px 0 15px; font-size: 22px; }
+    .share-card { flex: 1; padding: 30px 24px 22px; display: flex; flex-direction: column; justify-content: center; border: 2px solid var(--ink); border-radius: 18px; }
+    .share-card .ratio { margin: 12px 0 2px; }
+    .share-card h2 { margin: 0; font-size: 25px; line-height: 1.45; }
+    .share-card p { margin: 20px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .share-card small { margin-top: auto; color: var(--muted); }
+    .share .mini-actions { margin-top: 14px; }
+    .caption { max-width: 390px; margin: 10px auto 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .preview-mode { min-height: 100vh; display: grid; place-items: center; background: #d9d9d4; }
+    .preview-mode .phone { width: min(390px, 100vw); height: min(844px, 100vh); border-radius: 0; border: 0; box-shadow: none; }
+    @media (max-width: 1180px) { .grid { grid-template-columns: repeat(2, minmax(340px, 1fr)); } .board-head { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) { .board { padding: 24px 10px 50px; } .grid { grid-template-columns: 1fr; } .phone { width: min(390px, calc(100vw - 20px)); } .decision { max-width: none; } }
+  </style>
+</head>
+<body>
+  <main class="board" id="board">
+    <header class="board-head">
+      <div>
+        <h1>同频一下 · 全流程线框图</h1>
+        <p>本轮只确认页面结构、内容层级和点击路径，不代表最终视觉。02 已将“同频度”与“匿名同频理由”合并，用户作答后直接看到两类信息。</p>
+      </div>
+      <div class="decision"><strong>本轮核心决策</strong><br>删除“看看他们怎么想”的中间点击：选择答案后进入合并结果页，比例与理由在同一屏连续呈现。</div>
+    </header>
+    <nav class="flow" aria-label="核心流程">
+      <b>01 选择答案</b><span>→</span><b>02 比例＋理由</b><span>→</span><b>03 留下回声</b><span>→</span><b>04 提交成功</b><span>→</span><b>05 分享</b>
+    </nav>
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <template id="question">
+    <article class="phone"><div class="screen">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div>
+      <div class="brand">〰 同频一下<small>一次轻量的匿名共鸣实验</small></div>
+      <div class="content"><div class="meta">今日共鸣实验 · 128,672 人已回答</div>
+        <section class="card question-card"><div class="mark">?</div><h1>朋友失恋时，<br>你会怎么陪？</h1>
+          <div class="choices"><button class="choice" data-go="combined"><b>A</b><span>陪他一起骂</span></button><button class="choice" data-go="combined"><b>B</b><span>认真分析问题</span></button></div>
+          <div class="note">匿名选择 · 无需填写理由</div>
+        </section>
+      </div><div class="note">没有标准答案，只想知道此刻的你会怎么选</div>
+    </div></article>
+  </template>
+
+  <template id="combined">
+    <article class="phone"><div class="screen">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div>
+      <div class="brand">〰 同频一下<small>一次轻量的匿名共鸣实验</small></div>
+      <div class="content">
+        <section class="result-top"><div class="chip"><b>A</b><span>你选择了「陪他一起骂」</span></div><h1>全国有</h1><div class="ratio">27<span>%</span></div><h2>的人和你一样</h2><p>基于 128,672 份匿名选择</p></section>
+        <section class="reason-block"><div class="section-label"><span>一个同样选择 A 的人这样想</span><small>匿名理由</small></div>
+          <div class="card quote">“有时候朋友需要的不是答案，是有人先站在他这边。”<small>已审核理由库 · 非实时匹配</small></div>
+          <div class="mini-actions"><button class="btn">这句话有共鸣</button><button class="btn">换一句</button></div>
+        </section>
+        <div class="result-cta"><button class="btn primary" data-go="echo-empty">我也留下一句理由</button><button class="btn" data-go="share">生成我的同频卡</button></div>
+      </div>
+    </div></article>
+  </template>
+
+  <template id="echo-empty">
+    <article class="phone"><div class="screen echo">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span class="back">‹</span><strong>留下共鸣回声</strong><span></span></div>
+      <div class="content"><div class="step">写下理由 · 提交后需审核</div><div><span class="chip"><b>A</b><span>我选择了「陪他一起骂」</span></span></div>
+        <h1>为什么你会这样选择？</h1><p class="guidance">只写真实原因，不需要讲完整故事；以后做出相同选择的人可能会看到。</p>
+        <div class="input"><strong>我选择陪他一起骂，因为</strong><span class="placeholder">从这里开始写你的理由</span><span class="count">0 / 60</span></div>
+        <div class="rules"><span>需填写 10–60 字</span><span>不写可识别信息</span></div><div class="hint"><strong>参考表达：</strong>说清楚“为什么”，示例不会自动成为投稿。</div>
+        <div class="consent"><span class="check"></span><span>我同意审核通过后，以匿名形式展示给做出相同选择的人。</span></div>
+        <button class="btn disabled" data-go="echo-ready">填写至少 10 字后提交</button>
+      </div>
+    </div></article>
+  </template>
+
+  <template id="echo-ready">
+    <article class="phone"><div class="screen echo">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span class="back">‹</span><strong>留下共鸣回声</strong><span></span></div>
+      <div class="content"><div class="step">确认理由与匿名授权</div><div><span class="chip"><b>A</b><span>我选择了「陪他一起骂」</span></span></div>
+        <h1>为什么你会这样选择？</h1><p class="guidance">只写真实原因，不需要讲完整故事；以后做出相同选择的人可能会看到。</p>
+        <div class="input"><strong>我选择陪他一起骂，因为</strong><span class="value">有时候他需要的不是建议，而是有人先和他站在一起。</span><span class="count">26 / 60</span></div>
+        <div class="rules"><span>字数符合要求</span><span>未检测到可识别信息</span></div><div class="hint"><strong>提交后：</strong>先进入审核，不会立刻公开；仍可撤回授权。</div>
+        <div class="consent"><span class="check on">✓</span><span>我同意审核通过后，以匿名形式展示给做出相同选择的人。</span></div>
+        <button class="btn primary" data-go="success">匿名提交这句话</button>
+      </div>
+    </div></article>
+  </template>
+
+  <template id="success">
+    <article class="phone"><div class="screen">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="nav"><span></span><strong>留下共鸣回声</strong><span></span></div>
+      <div class="content success"><div class="success-mark">✓</div><h1>这句话已收到</h1><p>审核通过后，它可能成为某个人今天看到的同频理由。我们不会承诺一定展示。</p>
+        <div class="card summary"><small>你提交的匿名理由</small><p>“有时候他需要的不是建议，而是有人先和他站在一起。”</p></div>
+        <div class="result-cta"><button class="btn primary" data-go="share">完成并查看同频卡</button><button class="btn">查看我的授权</button></div>
+      </div><div class="note">审核前不会进入理由池 · 可随时撤回授权</div>
+    </div></article>
+  </template>
+
+  <template id="share">
+    <article class="phone"><div class="screen share">
+      <div class="status"><span>9:41</span><span>信号　电量</span></div><div class="brand">〰 同频一下<small>一次轻量的匿名共鸣实验</small></div>
+      <div class="content"><h1>今日同频选择</h1><section class="share-card"><span>今天，我和</span><div class="ratio">27<span>%</span></div><h2>的人<br>站在朋友这边</h2><p>陪伴有时不是解决问题，<br>而是先让对方不孤单。</p><small>2026.07.15　·　同频一下</small></section>
+        <div class="mini-actions"><button class="btn">保存图片</button><button class="btn primary">分享朋友</button></div>
+      </div><div class="note">只包含我的选择与群体比例</div>
+    </div></article>
+  </template>
+
+  <script>
+    const screens = [
+      ['question', '01 遇见问题', '选择后直接进入合并结果页。'],
+      ['combined', '02 同频结果＋匿名理由', '核心合并页：比例与理由无需二次点击。'],
+      ['echo-empty', '03A 留下回声 · 空态', '展示真实输入框、规则和授权。'],
+      ['echo-ready', '03B 留下回声 · 可提交', '同一页面的完成输入状态。'],
+      ['success', '04 提交成功', '明确审核状态与后续去向。'],
+      ['share', '05 分享同频卡', '只分享选择和比例，不分享投稿理由。']
+    ];
+    const params = new URLSearchParams(location.search);
+    const current = params.get('screen');
+
+    function cloneScreen(id) {
+      return document.getElementById(id).content.firstElementChild.cloneNode(true);
+    }
+    function openScreen(id) {
+      location.href = `${location.pathname}?screen=${id}`;
+    }
+    function bindNavigation(root) {
+      root.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => openScreen(button.dataset.go)));
+    }
+
+    if (current && screens.some(([id]) => id === current)) {
+      const phone = cloneScreen(current);
+      document.body.className = 'preview-mode';
+      document.body.innerHTML = '';
+      document.body.appendChild(phone);
+      bindNavigation(document.body);
+    } else {
+      const grid = document.getElementById('grid');
+      screens.forEach(([id, title, caption]) => {
+        const item = document.createElement('article');
+        item.className = 'frame-item';
+        item.innerHTML = `<header class="frame-title"><h2>${title}</h2><a href="?screen=${id}">打开手机预览 ↗</a></header>`;
+        item.appendChild(cloneScreen(id));
+        item.insertAdjacentHTML('beforeend', `<p class="caption">${caption}</p>`);
+        grid.appendChild(item);
+      });
+      bindNavigation(grid);
+    }
+  </script>
+</body>
+</html>
