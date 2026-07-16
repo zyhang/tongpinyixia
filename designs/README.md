@@ -4,13 +4,11 @@
 
 ```
 designs/
-├── icons/                       ← 小程序 / App 图标候选（1024×1024）
-│   ├── answer-beyond/           ← “答案之外”图标方向（512×512）
-│   ├── icon-01-minimal-flat.png
-│   ├── icon-02-signature-neon.png
-│   ├── icon-03-soft-gradient.png
-│   ├── icon-04-sound-ripple.png
-│   └── icon-05-geometric-badge.png
+├── icons/                       ← 小程序 / App 正式图标与历史候选
+│   ├── answer-beyond-app-icon.png  ← “答案之外”正式图标（1024×1024）
+│   └── archive/                 ← 已归档的历史候选
+│       ├── legacy-wave/
+│       └── answer-beyond-concepts/
 ├── wireframes/                  ← 线框图
 │   ├── all-pages.png
 │   └── index.html               ← 线框图浏览页
@@ -29,8 +27,8 @@ designs/
 
 ## 说明
 
-- `icons/answer-beyond/` 中为本轮“答案之外”品牌图标，均为 512×512 PNG
-- `icons/` 根目录中的其他待选品牌图标为 1024×1024 PNG；确认最终方向前不作为正式发布图标
+- `icons/answer-beyond-app-icon.png` 为当前唯一正式品牌图标，采用与高保真设计一致的深墨蓝、青色与粉色
+- `icons/archive/` 仅保存历史候选，不作为正式发布资源
 - 旧高保真预览已经与实际产品定位和页面流程不一致，相关导出图已移除
 - 当前页面结构以 `wireframes/` 为准；当前高保真实现位于 `high-fidelity/`，采用“安静夜间霓虹”方向
 - 各页面交互状态详见 PRD 第 7.2 节
