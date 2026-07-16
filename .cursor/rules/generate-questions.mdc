@@ -14,4 +14,5 @@ alwaysApply: false
 - 每题为 A/B 各生成 5 条理由
 - 理由必须像真人匿名投稿：短、有个人立场、带个人经历
 - 自动保证情感关系类占比 ≥40%
+- 写入题库 CSV 时必须包含 `updated_at` 列（Asia/Shanghai，YYYY-MM-DD HH:MM:SS）
 - 写入前输出预览，写入后报告类别分布
