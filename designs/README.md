@@ -17,6 +17,13 @@ designs/
 │   ├── flow-overview.png        ← 6 个页面流程总览
 │   ├── render-previews.py       ← 手机预览导出脚本
 │   └── previews/                ← 1170×2532 手机预览图
+├── high-fidelity-v4-high-contrast/ ← 高对比编辑海报完整候选稿
+│   ├── index.html               ← 9 个页面状态的可交互浏览页
+│   ├── flow-overview.png        ← 完整页面流程总览
+│   ├── UI-CODE-AGENT-IMPLEMENTATION-GUIDE.md ← 可直接交给 Code Agent 的 UI 开发指引
+│   ├── render-previews.py       ← 手机预览导出脚本
+│   └── previews/                ← 9 张 1170×2532 手机预览图
+├── homepage-high-contrast/      ← 高对比首页的前期单页概念稿
 ├── source/                      ← 历史高保真生成脚本，不代表当前实现
 │   ├── render-previews.py
 │   ├── render-previews.sh
@@ -31,4 +38,5 @@ designs/
 - `icons/archive/` 仅保存历史候选，不作为正式发布资源
 - 旧高保真预览已经与实际产品定位和页面流程不一致，相关导出图已移除
 - 当前页面结构以 `wireframes/` 为准；当前高保真实现位于 `high-fidelity/`，采用“安静夜间霓虹”方向
+- `high-fidelity-v4-high-contrast/` 为“高对比编辑海报”完整候选方向，在不改变 MVP 主流程的前提下覆盖正常流程、投稿流程和异常状态
 - 各页面交互状态详见 PRD 第 7.2 节

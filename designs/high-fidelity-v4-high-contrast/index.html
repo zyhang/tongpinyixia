@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>答案之外 · 高对比编辑海报 v4</title>
+  <style>
+    :root {
+      --bg: #06070b;
+      --panel: #f4efe7;
+      --ink: #101116;
+      --paper-muted: #69665f;
+      --white: #fffdf8;
+      --muted: #999ba4;
+      --pink: #ff5f91;
+      --cyan: #52e1d2;
+      --yellow: #ffe36e;
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+      --font: "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #000; color: var(--white); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+    button { border: 0; color: inherit; font: inherit; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+    .screen {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 82% 15%, rgba(82, 225, 210, .13), transparent 28%),
+        radial-gradient(circle at 12% 76%, rgba(255, 95, 145, .12), transparent 30%),
+        var(--bg);
+    }
+
+    .status {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 22px 0;
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .status-icons { display: flex; align-items: center; gap: 5px; }
+    .signal { width: 14px; height: 8px; border: 1.5px solid currentColor; border-top: 0; border-radius: 0 0 3px 3px; }
+    .wifi { width: 10px; height: 10px; border: 1.5px solid currentColor; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; transform: rotate(-45deg); }
+    .battery { width: 18px; height: 9px; border: 1.5px solid currentColor; border-radius: 3px; box-shadow: inset -4px 0 0 currentColor; }
+
+    .douyin-nav {
+      height: 56px;
+      display: grid;
+      grid-template-columns: 34px 1fr 34px;
+      align-items: center;
+      padding: 0 15px;
+      color: #a6a6ab;
+    }
+    .close { position: relative; width: 30px; height: 30px; background: transparent; }
+    .close::before, .close::after { content: ""; position: absolute; top: 14px; left: 5px; width: 22px; height: 2px; border-radius: 2px; background: #f6f6f7; }
+    .close::before { transform: rotate(45deg); }
+    .close::after { transform: rotate(-45deg); }
+    .tabs { display: flex; align-items: center; justify-content: center; gap: 22px; font-size: 14px; font-weight: 650; white-space: nowrap; }
+    .tabs .active { position: relative; color: #fff; }
+    .tabs .active::after { content: ""; position: absolute; left: 50%; bottom: -9px; width: 18px; height: 2px; border-radius: 2px; background: #fff; transform: translateX(-50%); }
+    .search { position: relative; width: 27px; height: 27px; border: 2px solid #f6f6f7; border-radius: 50%; }
+    .search::after { content: ""; position: absolute; right: -5px; bottom: -3px; width: 9px; height: 2px; border-radius: 2px; background: #f6f6f7; transform: rotate(48deg); }
+
+    .app {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 14px 18px 13px;
+    }
+    .brand { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 13px; }
+    .brand-row { display: flex; align-items: center; gap: 7px; }
+    .brand-name { font-size: 21px; font-weight: 820; letter-spacing: .04em; }
+    .anonymous { padding: 3px 7px; border: 1px solid rgba(255, 255, 255, .3); border-radius: 999px; color: #cbccd1; font-size: 10px; font-weight: 650; }
+    .brand-sub { margin-top: 3px; color: #a5a7af; font-size: 11px; letter-spacing: .03em; }
+    .ai { margin-top: 2px; padding: 4px 7px; border: 1px solid rgba(255, 255, 255, .18); border-radius: 6px; color: #8e9098; font-size: 10px; }
+
+    .question-poster {
+      position: relative;
+      padding: 17px 20px 20px;
+      border-radius: 22px;
+      color: var(--ink);
+      background: var(--panel);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, .36);
+      isolation: isolate;
+    }
+    .question-poster::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 25px;
+      width: 68px;
+      height: 6px;
+      border-radius: 0 0 5px 5px;
+      background: var(--pink);
+    }
+    .question-poster::after {
+      content: "";
+      position: absolute;
+      right: -9px;
+      top: 62px;
+      width: 44px;
+      height: 12px;
+      border-radius: 99px;
+      background: var(--cyan);
+      transform: rotate(-8deg);
+      z-index: -1;
+    }
+    .poster-top { display: flex; align-items: center; justify-content: space-between; }
+    .today { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; color: var(--ink); background: var(--yellow); font-size: 11px; font-weight: 800; }
+    .today::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+    .index { color: #7f7b73; font-size: 10px; font-weight: 760; letter-spacing: .14em; }
+    .guide { margin: 15px 0 5px; color: var(--paper-muted); font-size: 12px; font-weight: 650; }
+    .question {
+      margin: 0;
+      max-width: 315px;
+      font-size: clamp(28px, 8.1vw, 34px);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -.035em;
+    }
+    .question .accent { position: relative; display: inline-block; }
+    .question .accent::after { content: ""; position: absolute; left: 0; right: -3px; bottom: 2px; height: 8px; border-radius: 8px; background: rgba(255, 95, 145, .53); z-index: -1; transform: rotate(-1deg); }
+    .question-note { display: flex; align-items: center; gap: 9px; margin: 15px 0 0; color: var(--paper-muted); font-size: 11px; line-height: 1.5; }
+    .question-note::before { content: ""; width: 21px; height: 1px; flex: 0 0 21px; background: var(--ink); }
+
+    .choices { display: grid; gap: 10px; margin-top: 12px; }
+    .choice {
+      position: relative;
+      min-height: 68px;
+      display: grid;
+      grid-template-columns: 47px 1fr 20px;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px 9px 11px;
+      border-radius: 17px;
+      color: var(--ink);
+      text-align: left;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .22);
+      transition: transform 140ms var(--ease-out), filter 160ms ease;
+    }
+    .choice-a { background: var(--pink); }
+    .choice-b { background: var(--cyan); }
+    .choice:active { transform: scale(.975); }
+    .letter { width: 47px; height: 47px; display: grid; place-items: center; border: 2px solid rgba(16, 17, 22, .82); border-radius: 14px; font-size: 19px; font-weight: 900; }
+    .choice-copy small { display: block; margin-bottom: 1px; font-size: 9px; font-weight: 750; letter-spacing: .12em; opacity: .62; }
+    .choice-copy strong { display: block; font-size: 17px; font-weight: 850; letter-spacing: -.01em; }
+    .arrow { font-size: 23px; font-weight: 450; line-height: 1; }
+    .hint { margin: 11px 4px 0; color: #b5b6bc; text-align: center; font-size: 10.5px; line-height: 1.5; }
+
+    .app-footer { margin-top: auto; padding-top: 9px; display: flex; align-items: center; justify-content: space-between; color: #90929a; font-size: 11px; }
+    .skip { min-height: 34px; padding: 0 10px; color: #a8a9af; background: transparent; }
+    .swipe { display: flex; align-items: center; gap: 6px; }
+    .swipe::before { content: "⌃"; color: #d5d6da; font-size: 19px; }
+
+    .douyin-bottom {
+      height: 68px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, .08);
+      background: #000;
+      color: #88898e;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .douyin-bottom .active { color: #fff; }
+    .plus { width: 36px; height: 27px; display: grid; place-items: center; margin: auto; border-radius: 8px; color: #08090b; background: #fff; font-size: 25px; line-height: 1; box-shadow: -4px 0 var(--cyan), 4px 0 var(--pink); }
+
+    .page-content { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .paper { position: relative; border-radius: 22px; color: var(--ink); background: var(--panel); box-shadow: 0 22px 55px rgba(0, 0, 0, .34); }
+    .paper::before { content: ""; position: absolute; top: 0; left: 25px; width: 68px; height: 6px; border-radius: 0 0 5px 5px; background: var(--pink); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; color: var(--ink); background: var(--yellow); font-size: 10px; font-weight: 850; letter-spacing: .04em; }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .btn { min-height: 48px; padding: 0 16px; border-radius: 15px; font-size: 14px; font-weight: 820; transition: transform 140ms var(--ease-out), filter 160ms ease, opacity 160ms ease; }
+    .btn:active:not(:disabled), .mini-action:active:not(:disabled), .back:active { transform: scale(.975); }
+    .btn.primary { color: var(--ink); background: var(--yellow); box-shadow: 0 10px 24px rgba(0, 0, 0, .2); }
+    .btn.secondary { color: var(--white); border: 1px solid rgba(255, 255, 255, .22); background: rgba(255, 255, 255, .06); }
+    .btn:disabled { color: #777880; background: #24252b; box-shadow: none; opacity: .72; }
+    .page-actions { display: grid; gap: 8px; margin-top: auto; padding-top: 12px; }
+
+    .result-summary { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; padding: 19px 19px 16px; }
+    .selection-chip { display: inline-flex; align-items: center; gap: 7px; margin-top: 14px; color: var(--paper-muted); font-size: 10px; font-weight: 700; }
+    .selection-chip b { width: 24px; height: 24px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 8px; color: var(--ink); background: var(--pink); font-size: 11px; }
+    .result-copy { margin-top: 9px; }
+    .result-copy p { margin: 0; color: var(--paper-muted); font-size: 11px; font-weight: 650; }
+    .result-copy h1 { margin: 3px 0 0; max-width: 190px; font-size: 23px; line-height: 1.25; letter-spacing: -.035em; }
+    .ratio { position: relative; font-size: 66px; font-weight: 920; line-height: .9; letter-spacing: -.08em; }
+    .ratio span { font-size: 22px; letter-spacing: -.03em; }
+    .ratio::after { content: ""; position: absolute; left: 2px; right: -2px; bottom: -5px; height: 9px; border-radius: 8px; background: rgba(82, 225, 210, .7); z-index: -1; transform: rotate(-2deg); }
+    .data-note { grid-column: 1 / -1; margin: 0; color: #817e76; font-size: 9.5px; }
+
+    .reason-card { position: relative; margin-top: 11px; padding: 16px 16px 13px; border: 1px solid rgba(255, 255, 255, .14); border-radius: 19px; background: rgba(255, 255, 255, .07); }
+    .reason-card::before { content: "“"; position: absolute; right: 13px; top: -7px; color: rgba(255, 95, 145, .5); font-family: Georgia, serif; font-size: 58px; line-height: 1; }
+    .reason-label { color: var(--cyan); font-size: 10px; font-weight: 780; letter-spacing: .07em; }
+    .reason-text { min-height: 55px; margin: 9px 19px 9px 0; font-size: 16px; font-weight: 720; line-height: 1.52; transition: opacity 160ms ease, filter 160ms ease; }
+    .reason-text.is-switching { opacity: .3; filter: blur(2px); }
+    .reason-source { color: #9698a0; font-size: 9.5px; }
+    .reason-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px; }
+    .mini-action { min-height: 38px; padding: 0 7px; border: 1px solid rgba(255, 255, 255, .16); border-radius: 11px; color: #d5d6da; background: rgba(255, 255, 255, .04); font-size: 10.5px; font-weight: 720; transition: transform 140ms var(--ease-out), color 160ms ease, border-color 160ms ease, background-color 160ms ease; }
+    .mini-action.active { color: var(--ink); border-color: var(--cyan); background: var(--cyan); }
+    .resonance-count { height: 0; margin: 0; overflow: hidden; color: var(--cyan); text-align: center; font-size: 9.5px; opacity: 0; transform: translateY(4px); transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out); }
+    .resonance-count.selected { height: auto; margin-top: 8px; opacity: 1; transform: translateY(0); }
+    .boundary { margin: 8px 0 0; color: #868890; text-align: center; font-size: 9.5px; }
+
+    .local-nav { height: 40px; display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; margin-bottom: 12px; }
+    .local-nav strong { text-align: center; font-size: 14px; }
+    .back { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; color: var(--white); background: rgba(255, 255, 255, .06); font-size: 24px; transition: transform 140ms var(--ease-out), background-color 160ms ease; }
+    .posting-lead { margin: 4px 0 12px; color: #b2b4bb; font-size: 11px; line-height: 1.5; }
+    .posting-choice { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 12px; font-size: 16px; font-weight: 780; }
+    .posting-choice strong { padding: 6px 9px; border-radius: 10px; color: var(--ink); background: var(--pink); font-size: 13px; }
+    .input-wrap { position: relative; min-height: 220px; padding: 18px 16px 40px; border-radius: 20px; color: var(--ink); background: var(--panel); box-shadow: 0 18px 42px rgba(0, 0, 0, .3); }
+    .input-wrap::before { content: ""; position: absolute; left: 21px; top: 0; width: 64px; height: 6px; border-radius: 0 0 5px 5px; background: var(--cyan); }
+    .input { width: 100%; min-height: 160px; resize: none; padding: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font: 700 17px/1.65 var(--font); }
+    .input::placeholder { color: #9c9991; }
+    .count { position: absolute; right: 16px; bottom: 13px; color: #858179; font-size: 10px; }
+    .posting-note { margin: 9px 2px 0; color: #9ea0a7; font-size: 10px; }
+
+    .success-content, .state-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .success-poster, .state-poster { padding: 25px 21px 22px; text-align: center; }
+    .success-poster::after, .state-poster::after { content: ""; position: absolute; right: -8px; top: 52px; width: 40px; height: 11px; border-radius: 99px; background: var(--cyan); transform: rotate(-9deg); }
+    .success-mark, .state-mark { width: 56px; height: 56px; display: grid; place-items: center; margin: 0 auto 16px; border: 3px solid var(--ink); border-radius: 17px; color: var(--ink); background: var(--yellow); font-size: 27px; font-weight: 900; opacity: 1; transform: scale(1); transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out); }
+    @starting-style { .success-mark, .state-mark { opacity: 0; transform: scale(.95); } }
+    .success-poster h1, .state-poster h1 { margin: 0; font-size: 24px; line-height: 1.35; letter-spacing: -.035em; }
+    .success-poster p, .state-poster p { margin: 11px auto 0; max-width: 290px; color: var(--paper-muted); font-size: 11.5px; line-height: 1.7; }
+    .success-signoff { display: inline-block; margin-top: 11px; padding: 5px 9px; border-radius: 999px; color: var(--ink); background: var(--cyan); font-size: 10px; font-weight: 800; }
+    .state-poster .btn { width: 100%; margin-top: 18px; }
+
+    .gallery { padding: 32px; background: #101116; }
+    .gallery h1 { margin-bottom: 5px; color: #fffdf8; }
+    .gallery > p { margin-top: 0; color: #a8a9af; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 20px; }
+    .gallery-item { color: #fffdf8; }
+    .gallery-item h2 { margin-bottom: 5px; font-size: 14px; }
+    .gallery-item p { min-height: 34px; margin-top: 0; color: #999ba4; font-size: 11px; line-height: 1.5; }
+    .gallery iframe { width: 390px; height: 844px; border: 0; border-radius: 26px; background: #000; transform: scale(.76); transform-origin: top left; margin-bottom: -203px; }
+
+    @media (max-height: 760px) {
+      .status { height: 24px; }
+      .douyin-nav { height: 49px; }
+      .app { padding-top: 9px; }
+      .brand { margin-bottom: 9px; }
+      .brand-sub { display: none; }
+      .question-poster { padding-top: 14px; padding-bottom: 15px; }
+      .guide { margin-top: 11px; }
+      .question { font-size: 28px; }
+      .question-note { margin-top: 11px; }
+      .choice { min-height: 61px; }
+      .douyin-bottom { height: 58px; }
+      .result-summary { padding-top: 15px; padding-bottom: 13px; }
+      .ratio { font-size: 57px; }
+      .reason-card { padding-top: 13px; padding-bottom: 10px; }
+      .reason-text { min-height: 46px; margin-top: 6px; margin-bottom: 6px; font-size: 14px; }
+      .input-wrap { min-height: 185px; }
+      .input { min-height: 128px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .choice, .btn, .mini-action, .back, .resonance-count, .success-mark, .state-mark { transition-property: opacity, color, border-color, background-color, filter; }
+      .choice:active, .btn:active:not(:disabled), .mini-action:active:not(:disabled), .back:active { transform: none; filter: brightness(.92); }
+      .reason-text.is-switching { filter: none; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const status = `<div class="status"><span>12:53</span><span class="status-icons" aria-hidden="true"><i class="signal"></i><i class="wifi"></i><i class="battery"></i></span></div>`;
+    const douyinTop = `<nav class="douyin-nav" aria-label="抖音导航示意"><button class="close" type="button" aria-label="关闭"></button><div class="tabs"><span>同城</span><span>关注</span><span>商城</span><span class="active">推荐</span></div><span class="search" aria-hidden="true"></span></nav>`;
+    const douyinBottom = `<nav class="douyin-bottom" aria-label="抖音底部导航示意"><span class="active">首页</span><span>朋友</span><span class="plus">+</span><span>消息</span><span>我</span></nav>`;
+    const brand = `<header class="brand"><div><div class="brand-row"><strong class="brand-name">答案之外</strong><span class="anonymous">匿名</span></div><div class="brand-sub">选择之后，听见真实的想法</div></div><span class="ai">AI生成</span></header>`;
+    const feedFooter = `<footer class="app-footer"><button class="skip" type="button">不感兴趣</button><span class="swipe">上滑继续看视频</span></footer>`;
+    const selections = {
+      A: { label: "有过类似经历", ratio: 27, reasons: [
+        { text: "有时候，重新走近一次，才会真正看清自己舍不得的是什么。", count: 286 },
+        { text: "复合不是重来，而是让我确认那段关系已经走到了哪里。", count: 178 },
+        { text: "当时以为是遗憾，后来才知道再试一次也是一种告别。", count: 126 }
+      ]},
+      B: { label: "分了就是分了", ratio: 73, reasons: [
+        { text: "离开已经是答案，我不想用第二次受伤证明第一次的决定。", count: 231 },
+        { text: "真正的放下不是再试一次，而是允许故事停在这里。", count: 169 },
+        { text: "有些关系不需要一个更圆满的结尾，向前走就够了。", count: 104 }
+      ]}
+    };
+    let selectedOption = "A";
+
+    function shell(content, options = {}) {
+      const showBrand = options.brand !== false;
+      return `<main class="screen">${status}${douyinTop}<section class="app">${showBrand ? brand : ""}${content}</section>${douyinBottom}</main>`;
+    }
+
+    function questionTemplate() {
+      return shell(`<section class="page-content"><article class="question-poster"><div class="poster-top"><span class="today">今日一问</span><span class="index">QUESTION 01</span></div><p class="guide">如果是你，会怎么选？</p><h1 class="question">每段感情，都要<span class="accent">复合一次</span>，才能彻底放下吗？</h1><p class="question-note">放下一个人，本来就没有标准路径。</p></article><div class="choices" aria-label="选择一个更像你的答案"><button class="choice choice-a" type="button" data-option="A" data-go="result"><span class="letter">A</span><span class="choice-copy"><small>更像我的答案</small><strong>有过类似经历</strong></span><span class="arrow">›</span></button><button class="choice choice-b" type="button" data-option="B" data-go="result"><span class="letter">B</span><span class="choice-copy"><small>更像我的答案</small><strong>分了就是分了</strong></span><span class="arrow">›</span></button></div><p class="hint">没有标准答案，只选此刻更像你的那个。</p>${feedFooter}</section>`);
+    }
+
+    function resultTemplate(reacted = false) {
+      const selection = selections[selectedOption];
+      const firstReason = selection.reasons[0];
+      const reactionClass = reacted ? " active" : "";
+      const reactionDisabled = reacted ? " disabled" : "";
+      const reactionText = reacted ? "✓ 原来你也这样想" : "✦ 这句话说中了我";
+      const countClass = reacted ? " selected" : "";
+      const countText = reacted ? `还有 ${firstReason.count} 人也被这句话打动` : "";
+      return shell(`<section class="page-content"><article class="paper result-summary"><div><span class="eyebrow">选择结果</span><div class="selection-chip"><b>${selectedOption}</b><span>你选择了「${selection.label}」</span></div><div class="result-copy"><p>有这么多作答者</p><h1>和你选了一样</h1></div></div><strong class="ratio">${selection.ratio}<span>%</span></strong><p class="data-note">基于 1,284 次作答</p></article><article class="reason-card" data-reason-index="0"><span class="reason-label">一个同样选择的人这样想</span><p class="reason-text">“${firstReason.text}”</p><span class="reason-source">一个同样选择的人，留了这句话。</span><div class="reason-actions"><button class="mini-action reaction${reactionClass}" type="button"${reactionDisabled}>${reactionText}</button><button class="mini-action next-reason" type="button">↻ 再看一种想法</button></div><p class="resonance-count${countClass}" aria-live="polite">${countText}</p></article><p class="boundary">不需要认识，也可以理解一句话。</p><div class="page-actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn secondary" type="button" data-go="posting-empty">我也想说说为什么</button></div></section>`);
+    }
+
+    function postingTemplate(value) {
+      const selection = selections[selectedOption];
+      const escaped = value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      const disabled = value.trim() ? "" : " disabled";
+      return shell(`<section class="page-content"><nav class="local-nav"><button class="back" type="button" data-go="result" aria-label="返回选择结果">‹</button><strong>写下答案之外</strong><span></span></nav><p class="posting-lead">你的答案背后，也有一个为什么吗？</p><div class="posting-choice"><span>我选择</span><strong>${selection.label}</strong><span>，因为……</span></div><div class="input-wrap"><textarea class="input" maxlength="60" placeholder="写下当时的想法" aria-label="写下选择这个答案的理由">${escaped}</textarea><span class="count" aria-live="polite">${value.length} / 60</span></div><p class="posting-note">一句真实的话就够了。</p><div class="page-actions"><button class="btn primary submit-reason" type="button"${disabled}>让这句话飘进答案之外</button></div></section>`, { brand: false });
+    }
+
+    function successTemplate() {
+      return shell(`<section class="page-content"><div class="success-content"><article class="paper success-poster"><div class="success-mark" aria-hidden="true">✓</div><h1>好啦，这句话飘出去了</h1><p>也许很快，也许过一阵，它会被某个同样选择的人碰见。</p><span class="success-signoff">随缘，不催。</span></article><div class="page-actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn secondary" type="button">今天先到这，收工</button></div></div></section>`);
+    }
+
+    function stateTemplate(mark, title, description, button, target) {
+      return shell(`<section class="page-content"><div class="state-content"><article class="paper state-poster"><div class="state-mark" aria-hidden="true">${mark}</div><h1>${title}</h1><p>${description}</p><button class="btn primary" type="button" data-go="${target}">${button}</button></article></div></section>`);
+    }
+
+    const templates = {
+      question: questionTemplate,
+      result: () => resultTemplate(false),
+      reacted: () => resultTemplate(true),
+      "posting-empty": () => postingTemplate(""),
+      "posting-ready": () => postingTemplate("有时候，重新走近一次，才会真正看清自己舍不得的是什么。"),
+      "posting-success": successTemplate,
+      "sample-insufficient": () => stateTemplate("…", "答案还在慢慢聚集", "等更多人作答后，再回来看看。", "再看一道题", "question"),
+      "reason-insufficient": () => stateTemplate("◇", "这个答案背后，还没有足够多的真实理由", "我们宁愿暂时少展示，也不替任何人编造想法。", "再看一道题", "question"),
+      "load-failed": () => stateTemplate("↻", "暂时没能打开答案之外", "网络好像走神了一会儿。你的选择不会因此重复计算。", "再试一次", "result")
+    };
+
+    function currentPage() { return new URLSearchParams(location.search).get("page") || "gallery"; }
+    function go(page) { history.replaceState({}, "", `?page=${page}`); render(page); }
+
+    function bindInteractions() {
+      document.querySelectorAll("[data-go]").forEach((element) => element.addEventListener("click", () => {
+        if (element.dataset.option) selectedOption = element.dataset.option;
+        go(element.dataset.go);
+      }));
+      const reaction = document.querySelector(".reaction:not(:disabled)");
+      if (reaction) reaction.addEventListener("click", () => {
+        reaction.disabled = true;
+        reaction.classList.add("active");
+        reaction.textContent = "✓ 原来你也这样想";
+        const card = reaction.closest(".reason-card");
+        const index = Number(card.dataset.reasonIndex || 0);
+        const count = card.querySelector(".resonance-count");
+        count.textContent = `还有 ${selections[selectedOption].reasons[index].count} 人也被这句话打动`;
+        count.classList.add("selected");
+      });
+      const nextReason = document.querySelector(".next-reason");
+      if (nextReason) {
+        const reasons = selections[selectedOption].reasons;
+        let index = 0;
+        nextReason.addEventListener("click", () => {
+          const text = document.querySelector(".reason-text");
+          text.classList.add("is-switching");
+          window.setTimeout(() => {
+            index = (index + 1) % reasons.length;
+            text.textContent = `“${reasons[index].text}”`;
+            text.classList.remove("is-switching");
+            const card = text.closest(".reason-card");
+            card.dataset.reasonIndex = String(index);
+            const reactionButton = card.querySelector(".reaction");
+            reactionButton.disabled = false;
+            reactionButton.classList.remove("active");
+            reactionButton.textContent = "✦ 这句话说中了我";
+            const count = card.querySelector(".resonance-count");
+            count.textContent = "";
+            count.classList.remove("selected");
+          }, 160);
+        });
+      }
+      const textarea = document.querySelector("textarea");
+      if (textarea) {
+        const count = document.querySelector(".count");
+        const submit = document.querySelector(".submit-reason");
+        textarea.addEventListener("input", () => {
+          count.textContent = `${textarea.value.length} / 60`;
+          submit.disabled = textarea.value.trim().length === 0;
+        });
+        submit.addEventListener("click", () => { if (!submit.disabled) go("posting-success"); });
+      }
+    }
+
+    function render(page = currentPage()) {
+      if (page !== "gallery" && templates[page]) {
+        document.body.className = "";
+        document.body.innerHTML = templates[page]();
+        document.title = `答案之外 · ${page}`;
+        bindInteractions();
+        return;
+      }
+      const pages = [
+        ["question", "01 今日一问", "高对比题目海报，作答前不展示人数。"],
+        ["result", "02 选择结果＋理由", "比例、真人理由与下一题保持同页。"],
+        ["reacted", "02B 这句话说中了我", "反馈后才展示共鸣人数。"],
+        ["posting-empty", "03A 写下答案之外", "带着已选答案进入空输入状态。"],
+        ["posting-ready", "03B 可以飘进去了", "填写完成后的可提交状态。"],
+        ["posting-success", "04 这句话飘出去了", "低压力收束，下一题仍是主操作。"],
+        ["sample-insufficient", "05A 样本不足", "没有可靠比例时诚实降级。"],
+        ["reason-insufficient", "05B 理由不足", "不使用模板内容冒充真人理由。"],
+        ["load-failed", "05C 加载失败", "保留选择并允许重试。"]
+      ];
+      document.body.className = "gallery";
+      document.body.innerHTML = `<h1>答案之外 · 高对比编辑海报 v4</h1><p>完整可交互高保真流程，共 9 个页面状态。</p><div class="gallery-grid">${pages.map(([id, label, note]) => `<article class="gallery-item"><h2>${label}</h2><p>${note}</p><iframe src="?page=${id}" title="${label}"></iframe></article>`).join("")}</div>`;
+    }
+
+    window.addEventListener("popstate", () => render());
+    render();
+  </script>
+</body>
+</html>
