@@ -1,4 +1,9 @@
 .DS_Store
 reasonix.toml
-.agents/
 .reasonix/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/generate-questions/
+.agents/skills/generate-questions/*
+!.agents/skills/generate-questions/SKILL.md
