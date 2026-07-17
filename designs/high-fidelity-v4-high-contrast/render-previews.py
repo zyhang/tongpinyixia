@@ -59,6 +59,7 @@ const { chromium } = require('playwright');
   });
   const page = await context.newPage();
   await page.goto(process.argv[2], { waitUntil: 'load' });
+  await page.waitForTimeout(450);
   await page.screenshot({ path: process.argv[3] });
   await browser.close();
 })().catch((error) => {

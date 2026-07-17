@@ -150,6 +150,7 @@
     .choice-a { background: var(--pink); }
     .choice-b { background: var(--cyan); }
     .choice:active { transform: scale(.975); }
+    .choice.is-selected { transform: scale(.98); filter: brightness(.9); }
     .letter { width: 47px; height: 47px; display: grid; place-items: center; border: 2px solid rgba(16, 17, 22, .82); border-radius: 14px; font-size: 19px; font-weight: 900; }
     .choice-copy small { display: block; margin-bottom: 1px; font-size: 9px; font-weight: 750; letter-spacing: .12em; opacity: .62; }
     .choice-copy strong { display: block; font-size: 17px; font-weight: 850; letter-spacing: -.01em; }
@@ -189,6 +190,9 @@
     .page-actions { display: grid; gap: 8px; margin-top: auto; padding-top: 12px; }
 
     .result-summary { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; padding: 19px 19px 16px; }
+    .result-page .result-summary, .result-page .reason-card { opacity: 0; transform: translateY(10px); transition: opacity 210ms var(--ease-out), transform 210ms var(--ease-out); }
+    .result-page .reason-card { transition-delay: 50ms; }
+    .result-page.is-entered .result-summary, .result-page.is-entered .reason-card { opacity: 1; transform: translateY(0); }
     .selection-chip { display: inline-flex; align-items: center; gap: 7px; margin-top: 14px; color: var(--paper-muted); font-size: 10px; font-weight: 700; }
     .selection-chip b { width: 24px; height: 24px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 8px; color: var(--ink); background: var(--pink); font-size: 11px; }
     .result-copy { margin-top: 9px; }
@@ -226,6 +230,8 @@
 
     .success-content, .state-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
     .success-poster, .state-poster { padding: 25px 21px 22px; text-align: center; }
+    .success-page .success-poster { opacity: 0; transform: translateY(14px) scale(.975); transition: opacity 360ms var(--ease-out), transform 360ms var(--ease-out); }
+    .success-page.is-entered .success-poster { opacity: 1; transform: translateY(0) scale(1); }
     .success-poster::after, .state-poster::after { content: ""; position: absolute; right: -8px; top: 52px; width: 40px; height: 11px; border-radius: 99px; background: var(--cyan); transform: rotate(-9deg); }
     .success-mark, .state-mark { width: 56px; height: 56px; display: grid; place-items: center; margin: 0 auto 16px; border: 3px solid var(--ink); border-radius: 17px; color: var(--ink); background: var(--yellow); font-size: 27px; font-weight: 900; opacity: 1; transform: scale(1); transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out); }
     @starting-style { .success-mark, .state-mark { opacity: 0; transform: scale(.95); } }
@@ -263,8 +269,9 @@
       .input { min-height: 128px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .choice, .btn, .mini-action, .back, .resonance-count, .success-mark, .state-mark { transition-property: opacity, color, border-color, background-color, filter; }
+      .choice, .btn, .mini-action, .back, .resonance-count, .success-mark, .state-mark, .result-page .result-summary, .result-page .reason-card, .success-page .success-poster { transition-property: opacity, color, border-color, background-color, filter; transition-delay: 0ms; }
       .choice:active, .btn:active:not(:disabled), .mini-action:active:not(:disabled), .back:active { transform: none; filter: brightness(.92); }
+      .choice.is-selected, .result-page .result-summary, .result-page .reason-card, .success-page .success-poster { transform: none; }
       .reason-text.is-switching { filter: none; }
     }
   </style>
@@ -276,6 +283,31 @@
     const douyinBottom = `<nav class="douyin-bottom" aria-label="抖音底部导航示意"><span class="active">首页</span><span>朋友</span><span class="plus">+</span><span>消息</span><span>我</span></nav>`;
     const brand = `<header class="brand"><div><div class="brand-row"><strong class="brand-name">答案之外</strong><span class="anonymous">匿名</span></div><div class="brand-sub">选择之后，听见真实的想法</div></div><span class="ai">AI生成</span></header>`;
     const feedFooter = `<footer class="app-footer"><button class="skip" type="button">不感兴趣</button><span class="swipe">上滑继续看视频</span></footer>`;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sounds = {
+      choice: new Audio("../sounds/choice-tap.wav"),
+      resonance: new Audio("../sounds/resonance-glow.wav"),
+      floatAway: new Audio("../sounds/reason-float-away.wav")
+    };
+    Object.values(sounds).forEach((sound) => { sound.preload = "auto"; });
+    let activeSound = null;
+    let choicePending = false;
+
+    function stopSounds() {
+      Object.values(sounds).forEach((sound) => {
+        sound.pause();
+        sound.currentTime = 0;
+      });
+      activeSound = null;
+    }
+
+    function playSound(name) {
+      const sound = sounds[name];
+      if (!sound) return;
+      stopSounds();
+      activeSound = sound;
+      sound.play().catch(() => { activeSound = null; });
+    }
     const selections = {
       A: { label: "有过类似经历", ratio: 27, reasons: [
         { text: "有时候，重新走近一次，才会真正看清自己舍不得的是什么。", count: 286 },
@@ -307,7 +339,7 @@
       const reactionText = reacted ? "✓ 原来你也这样想" : "✦ 这句话说中了我";
       const countClass = reacted ? " selected" : "";
       const countText = reacted ? `还有 ${firstReason.count} 人也被这句话打动` : "";
-      return shell(`<section class="page-content"><article class="paper result-summary"><div><span class="eyebrow">选择结果</span><div class="selection-chip"><b>${selectedOption}</b><span>你选择了「${selection.label}」</span></div><div class="result-copy"><p>有这么多作答者</p><h1>和你选了一样</h1></div></div><strong class="ratio">${selection.ratio}<span>%</span></strong><p class="data-note">基于 1,284 次作答</p></article><article class="reason-card" data-reason-index="0"><span class="reason-label">一个同样选择的人，留了这句话</span><p class="reason-text">“${firstReason.text}”</p><div class="reason-actions"><button class="mini-action reaction${reactionClass}" type="button"${reactionDisabled}>${reactionText}</button><button class="mini-action next-reason" type="button">↻ 再看一种想法</button></div><p class="resonance-count${countClass}" aria-live="polite">${countText}</p></article><p class="boundary">不需要认识，也可以理解一句话。</p><div class="page-actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn secondary" type="button" data-go="posting-empty">我也想说说为什么</button></div></section>`);
+      return shell(`<section class="page-content result-page"><article class="paper result-summary"><div><span class="eyebrow">选择结果</span><div class="selection-chip"><b>${selectedOption}</b><span>你选择了「${selection.label}」</span></div><div class="result-copy"><p>有这么多作答者</p><h1>和你选了一样</h1></div></div><strong class="ratio">${selection.ratio}<span>%</span></strong><p class="data-note">基于 1,284 次作答</p></article><article class="reason-card" data-reason-index="0"><span class="reason-label">一个同样选择的人，留了这句话</span><p class="reason-text">“${firstReason.text}”</p><div class="reason-actions"><button class="mini-action reaction${reactionClass}" type="button"${reactionDisabled}>${reactionText}</button><button class="mini-action next-reason" type="button">↻ 再看一种想法</button></div><p class="resonance-count${countClass}" aria-live="polite">${countText}</p></article><p class="boundary">不需要认识，也可以理解一句话。</p><div class="page-actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn secondary" type="button" data-go="posting-empty">我也想说说为什么</button></div></section>`);
     }
 
     function postingTemplate(value) {
@@ -318,7 +350,7 @@
     }
 
     function successTemplate() {
-      return shell(`<section class="page-content"><div class="success-content"><article class="paper success-poster"><div class="success-mark" aria-hidden="true">✓</div><h1>好啦，这句话飘出去了</h1><p>也许很快，也许过一阵，它会被某个同样选择的人碰见。</p><span class="success-signoff">随缘，不催。</span></article><div class="page-actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn secondary" type="button">今天先到这，收工</button></div></div></section>`);
+      return shell(`<section class="page-content success-page"><div class="success-content"><article class="paper success-poster"><div class="success-mark" aria-hidden="true">✓</div><h1>好啦，这句话飘出去了</h1><p>也许很快，也许过一阵，它会被某个同样选择的人碰见。</p><span class="success-signoff">随缘，不催。</span></article><div class="page-actions"><button class="btn primary" type="button" data-go="question">再看一道题</button><button class="btn secondary" type="button">今天先到这，收工</button></div></div></section>`);
     }
 
     function stateTemplate(mark, title, description, button, target) {
@@ -338,12 +370,27 @@
     };
 
     function currentPage() { return new URLSearchParams(location.search).get("page") || "gallery"; }
-    function go(page) { history.replaceState({}, "", `?page=${page}`); render(page); }
+    function go(page) {
+      stopSounds();
+      history.replaceState({}, "", `?page=${page}`);
+      render(page);
+    }
 
     function bindInteractions() {
       document.querySelectorAll("[data-go]").forEach((element) => element.addEventListener("click", () => {
-        if (element.dataset.option) selectedOption = element.dataset.option;
+        if (element.dataset.option) return;
         go(element.dataset.go);
+      }));
+      document.querySelectorAll(".choice[data-option]").forEach((choice) => choice.addEventListener("click", (event) => {
+        if (choicePending) return;
+        choicePending = true;
+        selectedOption = choice.dataset.option;
+        playSound("choice");
+        if (event.detail !== 0 && !reducedMotion.matches) choice.classList.add("is-selected");
+        window.setTimeout(() => {
+          choicePending = false;
+          go("result");
+        }, event.detail === 0 || reducedMotion.matches ? 0 : 110);
       }));
       const reaction = document.querySelector(".reaction:not(:disabled)");
       if (reaction) reaction.addEventListener("click", () => {
@@ -355,6 +402,7 @@
         const count = card.querySelector(".resonance-count");
         count.textContent = `还有 ${selections[selectedOption].reasons[index].count} 人也被这句话打动`;
         count.classList.add("selected");
+        playSound("resonance");
       });
       const nextReason = document.querySelector(".next-reason");
       if (nextReason) {
@@ -387,7 +435,11 @@
           count.textContent = `${textarea.value.length} / 60`;
           submit.disabled = textarea.value.trim().length === 0;
         });
-        submit.addEventListener("click", () => { if (!submit.disabled) go("posting-success"); });
+        submit.addEventListener("click", () => {
+          if (submit.disabled) return;
+          go("posting-success");
+          playSound("floatAway");
+        });
       }
     }
 
@@ -397,6 +449,9 @@
         document.body.innerHTML = templates[page]();
         document.title = `答案之外 · ${page}`;
         bindInteractions();
+        window.setTimeout(() => {
+          document.querySelector(".result-page, .success-page")?.classList.add("is-entered");
+        }, reducedMotion.matches ? 0 : 20);
         return;
       }
       const pages = [
@@ -414,7 +469,8 @@
       document.body.innerHTML = `<h1>答案之外 · 高对比编辑海报 v4</h1><p>完整可交互高保真流程，共 9 个页面状态。</p><div class="gallery-grid">${pages.map(([id, label, note]) => `<article class="gallery-item"><h2>${label}</h2><p>${note}</p><iframe src="?page=${id}" title="${label}"></iframe></article>`).join("")}</div>`;
     }
 
-    window.addEventListener("popstate", () => render());
+    window.addEventListener("popstate", () => { stopSounds(); render(); });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) stopSounds(); });
     render();
   </script>
 </body>
