@@ -477,6 +477,7 @@ export async function submitReason({ questionId, option, content, requestId }) {
 
 ## 10. 动效与反馈
 
+- 静态 UI 完成后的详细动效、音效、状态锁、生命周期和验收要求，以 `MOTION-CODE-AGENT-IMPLEMENTATION-GUIDE.md` 为准；本节只作为基础兼容基线。
 - 高频点击只使用 `120–160ms` 按下缩放反馈。
 - 状态卡首次出现可以使用 `180–220ms` 的 `opacity + scale(.95)`。
 - 理由切换使用 `160ms` 淡出，再替换文本并淡入。
